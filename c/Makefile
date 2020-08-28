@@ -1,11 +1,12 @@
-# CXX:=g++ -std=c++11
-CC:=gcc
-SRCS:= 		$(wildcard *.c)
-OBJ:= 		$(patsubst %.c, %.o, ${SRCS})
-PREFILE:= 	$(patsubst %.o, %.i, ${OBJ})
-ASMFILE:= 	$(patsubst %.o, %.s, ${OBJ})
-TARGET:=main
+CC	   	:= gcc
+SRCS   	:= $(wildcard *.c)
+OBJ	   	:= $(patsubst %.c, %.o, ${SRCS})
+PREFILE	:= $(patsubst %.o, %.i, ${OBJ})
+ASMFILE	:= $(patsubst %.o, %.s, ${OBJ})
+TARGET 	:= main
+
 all: ${TARGET}
+
 .PHONY: clean distclean
 
 $(PREFILE):%.i:%.c

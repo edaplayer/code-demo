@@ -1,17 +1,17 @@
-CC:=gcc
-# CXX:=g++ -std=c++11
-CXX:=g++
+CC      := gcc
+# CXX  := g++ -std=c++11
+CXX     :=g++
 
-CFILE:= 		$(wildcard *.c)
-CPPFILE:=	$(wildcard *.cpp)
+CFILE   := $(wildcard *.c)
+CPPFILE := $(wildcard *.cpp)
 
-COBJ:= 		$(patsubst %.c, %.o, ${CFILE})
-CPPOBJ:=	$(patsubst %.cpp, %.o, ${CPPFILE})
+COBJ    := $(patsubst %.c, %.o, ${CFILE})
+CPPOBJ  := $(patsubst %.cpp, %.o, ${CPPFILE})
 
-PREFILE:= 	$(patsubst %.o, %.i, ${COBJ})
-CXXPRE:= 	$(patsubst %.o, %.i, ${CPPOBJ})
-ASMFILE:= 	$(patsubst %.o, %.s, ${COBJ})
-CXXASM:= 	$(patsubst %.o, %.s, ${CPPOBJ})
+PREFILE := $(patsubst %.o, %.i, ${COBJ})
+CXXPRE  := $(patsubst %.o, %.i, ${CPPOBJ})
+ASMFILE := $(patsubst %.o, %.s, ${COBJ})
+CXXASM  := $(patsubst %.o, %.s, ${CPPOBJ})
 
 $(info CFILE=${CFILE})
 $(info CPPFILE=${CPPFILE})
@@ -22,8 +22,10 @@ $(info CXXPRE=${CXXPRE})
 $(info ASMFILE=${ASMFILE})
 $(info CXXASM=${CXXASM})
 
-TARGET:=main
+TARGET := main
+
 all: ${TARGET}
+
 .PHONY: clean distclean
 
 $(PREFILE):%.i:%.c

@@ -42,11 +42,12 @@ static void avahi_hexdump(const void * p, uint32_t size) {
 	const uint8_t *c = p;
 	assert(p);
 	printf("Dumping %u bytes from %p:\n", size, p);
+	printf("offset    0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F\n");
 
 	while (size > 0) {
 		unsigned i;
 
-		printf("%04zu: ", (void *)c - p);
+		printf("%08zx: ", (void *)c - p);
 
 		for (i = 0; i < 16; i++) {
 			if (i < size)

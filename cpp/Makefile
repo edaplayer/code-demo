@@ -13,14 +13,14 @@ CXXPRE  := $(patsubst %.o, %.i, ${CPPOBJ})
 ASMFILE := $(patsubst %.o, %.s, ${COBJ})
 CXXASM  := $(patsubst %.o, %.s, ${CPPOBJ})
 
-$(info CFILE=${CFILE})
-$(info CPPFILE=${CPPFILE})
-$(info COBJ=${COBJ})
-$(info CPPOBJ=${CPPOBJ})
-$(info PREFILE=${PREFILE})
-$(info CXXPRE=${CXXPRE})
-$(info ASMFILE=${ASMFILE})
-$(info CXXASM=${CXXASM})
+# $(info CFILE=${CFILE})
+# $(info CPPFILE=${CPPFILE})
+# $(info COBJ=${COBJ})
+# $(info CPPOBJ=${CPPOBJ})
+# $(info PREFILE=${PREFILE})
+# $(info CXXPRE=${CXXPRE})
+# $(info ASMFILE=${ASMFILE})
+# $(info CXXASM=${CXXASM})
 
 TARGET := main
 

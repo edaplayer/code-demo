@@ -62,6 +62,7 @@ public:
 	virtual Computer* CreateComputer() = 0;
 };
 
+/* 定义两个工厂类：苹果工厂和华为工厂*/
 class AppleFactory : public Factory
 {
 public:

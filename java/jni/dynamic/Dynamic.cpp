@@ -29,7 +29,7 @@ static const JNINativeMethod methods[] = {
 
 static const char *classPathName = "Dynamic";
 
-/* (*env)->RegisterNatives(env, cls, &nm, 1); */
+/* deprecated method: (*env)->RegisterNatives(env, cls, &methods, numMethods); */
 /*
  * Register several native methods for one class.
  * frameworks/base/./core/tests/hosttests/test-apps/SharedUid/64/jni/native.cpp

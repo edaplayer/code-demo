@@ -8,7 +8,7 @@ java: $(TARGET).java
 	@echo [javac] java code 
 	@javac $(TARGET).java && javah $(TARGET)
 
-native: java Dynamic.cpp $(TARGET).h
+native: java $(TARGET).cpp $(TARGET).h
 	@echo [CXX] native code
 	@gcc -o lib$(TARGET).so $(TARGET).cpp \
 		-I $$JAVA_HOME/include \

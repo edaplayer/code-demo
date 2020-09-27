@@ -24,7 +24,7 @@ JNIEXPORT void JNICALL jni_chello_impl
 }
 
 static const JNINativeMethod methods[] = {
-	{"chello",      "(I)V", (void *)jni_chello_impl},
+	{(const char*)"chello", (const char*)"(I)V", (void *)jni_chello_impl},
 };
 
 static const char *classPathName = "Dynamic";

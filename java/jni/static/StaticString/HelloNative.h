@@ -9,11 +9,35 @@ extern "C" {
 #endif
 /*
  * Class:     HelloNative
- * Method:    chello
- * Signature: (ILjava/lang/String;)V
+ * Method:    getInt
+ * Signature: (I)I
  */
-JNIEXPORT void JNICALL Java_HelloNative_chello
+JNIEXPORT jint JNICALL Java_HelloNative_getInt
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     HelloNative
+ * Method:    getString
+ * Signature: (ILjava/lang/String;)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_HelloNative_getString
   (JNIEnv *, jclass, jint, jstring);
+
+/*
+ * Class:     HelloNative
+ * Method:    getSumOfArray
+ * Signature: ([I)I
+ */
+JNIEXPORT jint JNICALL Java_HelloNative_getSumOfArray
+  (JNIEnv *, jclass, jintArray);
+
+/*
+ * Class:     HelloNative
+ * Method:    getArray
+ * Signature: ([I)[I
+ */
+JNIEXPORT jintArray JNICALL Java_HelloNative_getArray
+  (JNIEnv *, jclass, jintArray);
 
 #ifdef __cplusplus
 }

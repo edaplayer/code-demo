@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <jni.h>
-#include "Dynamic.h"
+// #include "Dynamic.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,14 +17,14 @@ extern "C" {
  * Method:    chello
  * Signature: ()V
  */
-JNIEXPORT void JNICALL jni_chello_impl
+JNIEXPORT void JNICALL chello
   (JNIEnv * env, jobject thiz, jint val)
 {
 	printf("say Hello %d\n", val);
 }
 
 static const JNINativeMethod methods[] = {
-	{(const char*)"chello", (const char*)"(I)V", (void *)jni_chello_impl},
+	{"chello", "(I)V", (void *) chello},
 };
 
 static const char *classPathName = "Dynamic";

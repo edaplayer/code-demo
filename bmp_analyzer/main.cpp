@@ -48,26 +48,25 @@ struct TbitmapHeader {
 
 void print_hex_array(char *array, unsigned int size) {
      unsigned int i;
-	 printf("%lu: ", (long unsigned int)array);
-	 printf("size = %d:", size);
-		 printf("%02X", (char)array[0]);
-		 printf("%02X", (char)array[1]);
-		 printf("%02X", (char)array[2]);
-		 printf("%02X", (char)array[3]);
+	 printf("Address %lu: ", (long unsigned int)array);
 
-	 // for (i=0; i<size; i++) {
-		 // printf("%02X", (char)array[i]);
-	 // }
-	 printf(" (%db)\n",size);
+	 for (i=0; i<size; i++) {
+		 printf("%02X", (unsigned char)array[i]);
+	 }
+	 printf(" (%d Byte)\n",size);
 }
 
 void print_bitmapHeader(struct TbitmapHeader *p) {
 	printf("bfType ");
 	print_hex_array(p->bfType.array, sizeof(p->bfType.array));
+
 	printf("bfSize ");
 	print_hex_array(p->bfSize.array, sizeof(p->bfSize.array));
+
 	printf("RSVD1 %4.4x\nRSVD2 %4.4x - ", p->bfReserved1.all, p->bfReserved2.all);
+	print_hex_array(p->bfReserved1.array, sizeof(p->bfReserved1.array));
 	print_hex_array(p->bfReserved2.array, sizeof(p->bfReserved2.array));
+
 	printf("Offset %d[%08x] - ", p->bfOffBits.all, p->bfOffBits.all);
 	print_hex_array(&p->bfOffBits.array[0], sizeof(p->bfOffBits.array));
 	// ---
@@ -139,21 +138,23 @@ int main(int argc, char *argv[]) {
 
 	read(fd, array, sizeof(BITMAPHEADER));
 
-	printf("%2x",(char)array[0]);
+	printf("Readed %ld bytes frome %s\n\n", sizeof(BITMAPHEADER), argv[1]);
 
-	printf("Readed %ld.\n", sizeof(TbitmapHeader));
-	for (i=0; i<sizeof(TbitmapHeader); i++ ) {
+	printf("Dump data %ld bytes frome BITMAPHEADER\n", sizeof(BITMAPHEADER));
+	for (i=0; i<sizeof(BITMAPHEADER); i++ ) {
 		printf("%2.2x", array[i]);
 		if (i%2 == 1) printf(" ");
 	}
     printf("\n");
-    close(fd);
 
-	// print_bitmapHeader((struct TbitmapHeader *)array);
+    close(fd);
 
     printf("\n");
 	print_bmpfileheader(pbfheader);
 	print_bmpinfoheader(pbiheader);
+
+	printf("\n###### Old code print_bitmapHeader ######\n");
+	print_bitmapHeader((struct TbitmapHeader *)array);
 
     return 0;
 }

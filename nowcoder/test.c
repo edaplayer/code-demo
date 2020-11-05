@@ -10,6 +10,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <math.h>
 
 //统计单词个数
 int word_count(int argc, char **argv)
@@ -26,9 +27,10 @@ int word_count(int argc, char **argv)
 			cnt++;
 		i++;
 	}
-    printf("%d\n", cnt-1);
+	printf("%d\n", cnt-1);
 }
 
+// 计算字符个数
 void get_char_count()
 {
 	char * line = NULL;
@@ -217,6 +219,10 @@ int nrand(int argc, char **argv)
 }
 
 //hash解法
+// 步骤：
+// 1. 记录所有数据
+// 2. 遍历所有a[i], hasn[ a[i] ] =1
+// 3. if hash[i], printf
 void hash_sort(int array[], int n)
 {
 	int hash[1001] = {0};
@@ -288,7 +294,7 @@ int seprate()
 }
 
 // 十六进制转进十进制
-int tointerger(char s[], int n)
+int hex2int(char s[], int n)
 {
 	char c = 0;
 	int count = 1;
@@ -296,32 +302,136 @@ int tointerger(char s[], int n)
 
 	while(n--)
 	{
-		c = s[n];
-		c = tolower(c);
+		c = tolower(s[n]);
 
-		if(c>='0' && c<='9')
+		if (isdigit(c))
 		{
-			c = (c - '0');
-		} else if (c>='a' && c<='z') {
+			c = c - '0';
+		} else if (isalpha(c)) {
 			c = c - 'a' + 10;
 		}
-
 		sum += c * count  ;
-
 		count *= 16;
 	}
-
 	return sum;
-
 }
 
-int main(int argc, char *argv[])
+int testhex(int argc, char *argv[])
 {
 	char s[100];
 	while(scanf("%s", s) != EOF)
 	{
-		int result = tointerger(&s[2], strlen(s) - 2);
-		printf("result = %d\n", result);
+		int result = hex2int(&s[2], strlen(s) - 2);
+		printf("%d\n", result);
+	}
+	return 0;
+}
+
+/* 名字的漂亮度 */
+int cmp(const void *a, const void *b)
+{
+	return *(int *)a - *(int *)b;
+}
+
+int get_beauty(char s[])
+{
+	int alpha[26] = {0};
+	char c = 0;
+	for(int i = 0; i < strlen(s); i++)
+	{
+		c = tolower(s[i]) - 'a';
+		alpha[c]++;
+	}
+
+	qsort(alpha, 26, sizeof(int), cmp);
+
+	int sum = 0;
+	for(int i = 26; i>0; i--)
+	{
+		if(alpha[i-1])
+			sum += i * alpha[i-1];
+	}
+	printf("%d\n", sum);
+}
+
+int beauty_main()
+{
+	int n = 0;
+	char s[1000] = {0};
+	while(scanf("%d", &n) != EOF) {
+		for(int i = 0; i < n; i++)
+		{
+			scanf("%s", s);
+			get_beauty(s);
+		}
+	}
+	return 0;
+}
+
+// 求int整数中1的个数
+int count1_main()
+{
+	int n = 0;
+	int count = 0;
+	while(scanf("%d", &n) != EOF) {
+		while(n)
+		{
+			n &= n - 1;
+			count ++;
+		}
+		printf("%d\n", count);
+	}
+	return 0;
+}
+
+int count2_main()
+{
+	int x = 0;
+	scanf("%d", &x);
+	x=(x&0x55555555) + ((x>>1)&0x55555555);
+	x=(x&0x33333333) + ((x>>2)&0x33333333);
+	x=(x&0x0f0f0f0f) + ((x>>4)&0x0f0f0f0f);
+	x=(x&0x00ff00ff) + ((x>>8)&0x00ff00ff);
+	x=(x&0x0000ffff) + ((x>>16)&0x0000ffff);
+	printf("%d\n", x);
+}
+
+//回文
+#define MAX(a,b) ((a>b)?(a):(b))
+int get_length_of_one_palindrome(char s[], int left, int right) {
+	//从中心点左边向两侧逐字符对比
+	while (left >= 0 && right < strlen(s) && s[left] == s[right]) {
+		left--;
+		right++;
+	}
+	//返回长度
+	return right - left - 1;
+}
+
+int get_longest_palindrome(char s[]) {
+	int start = 0, end = 0;
+	int maxlen = 0;
+	for (int i = 0; i < strlen(s); i++) {
+		int len1 = get_length_of_one_palindrome(s, i, i); //从一个字符扩展
+		int len2 = get_length_of_one_palindrome(s, i, i + 1); //从两个字符之间扩展
+		int len = MAX(len1, len2);
+		//根据 i 和 len 求得字符串的相应下标
+		if (len > maxlen) {
+			maxlen = len;
+			/* start = i - (len - 1) / 2; */
+			/* end = i + len / 2; */
+		}
+	}
+	return maxlen;
+	/* return end + 1 - start; */
+}
+
+int main()
+{
+	int n = 0;
+	char s[1000] = {0};
+	while(scanf("%s", s) != EOF) {
+		printf("%d\n", get_longest_palindrome(s));
 	}
 	return 0;
 }

@@ -441,6 +441,7 @@ int palindrome1_main()
 }
 
 // manacher, p[i] - 1 为所求，原问题转化为求p[i]
+#define MAX(a,b) (((a)>(b))?(a):(b))
 #define MIN(a,b) (((a)<(b))?(a):(b))
 int manacher(char* str)
 {
@@ -496,7 +497,7 @@ char* expand_string(char* s)
 
 	s_new[0] = '#';
 
-	for(int i=0; i<size; i++)
+	for(int i=0; i < size; i++)
 	{
 		s_new[2*i + 1] = s[i];
 		s_new[2*i + 2] = '#';

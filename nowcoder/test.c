@@ -397,7 +397,7 @@ int count2_main()
 }
 
 //回文
-#define MAX(a,b) ((a>b)?(a):(b))
+#define MAX(a,b) (((a)>(b))?(a):(b))
 int get_length_of_one_palindrome(char s[], int left, int right) {
 	//从中心点左边向两侧逐字符对比
 	while (left >= 0 && right < strlen(s) && s[left] == s[right]) {
@@ -405,6 +405,7 @@ int get_length_of_one_palindrome(char s[], int left, int right) {
 		right++;
 	}
 	//返回长度
+	printf("l = %d, r = %d\n", left, right);
 	return right - left - 1;
 }
 
@@ -412,8 +413,11 @@ int get_longest_palindrome(char s[]) {
 	int start = 0, end = 0;
 	int maxlen = 0;
 	for (int i = 0; i < strlen(s); i++) {
+		printf("i = %d\n", i);
 		int len1 = get_length_of_one_palindrome(s, i, i); //从一个字符扩展
 		int len2 = get_length_of_one_palindrome(s, i, i + 1); //从两个字符之间扩展
+		printf("len1 = %d\n", len1);
+		printf("len2 = %d\n", len2);
 		int len = MAX(len1, len2);
 		//根据 i 和 len 求得字符串的相应下标
 		if (len > maxlen) {
@@ -426,7 +430,7 @@ int get_longest_palindrome(char s[]) {
 	/* return end + 1 - start; */
 }
 
-int main()
+int palindrome1_main()
 {
 	int n = 0;
 	char s[1000] = {0};
@@ -435,3 +439,92 @@ int main()
 	}
 	return 0;
 }
+
+// manacher, p[i] - 1 为所求，原问题转化为求p[i]
+#define MIN(a,b) (((a)<(b))?(a):(b))
+int manacher(char* str)
+{
+	int size = strlen(str);
+
+	//构建p[i]数组
+	char *p = malloc(sizeof(int) * size);
+	p[0] = 1;
+
+	int id = 0;
+	int mx = 1;
+	int maxlen = -1;
+	// p[i]示意图 : mx'____i'____id____i____mx
+	// j = i' = 2*id -i
+
+	for(int i = 1; i<size; i++)
+	{
+		if(mx>i)
+			// 因为id附近（大回文串）是对称的，如果j附近对称，那么i附近也必然对称
+			//所以可以让p[i]跳过一部分字串的重复检测，直接跳到i+p[i]继续检测
+			p[i] = MIN(p[2*id - i], mx-i);
+		else
+			p[i] = 1;
+
+		// 扩大回文半径，求p[i]的最终值
+		// 左侧回文半径p[i]的值一定不能超过边界，即p[i] <= i
+		while(str[i - p[i]] == str[i + p[i]] && (p[i] <= i))
+			p[i]++;
+
+		/* 更新mx和id */
+		/* printf("mx = %d, i+[pi] = %d\n", mx, i + p[i]); */
+		if(mx < i + p[i])
+		{
+			mx = i + p[i];
+			id = i;
+		}
+		maxlen = MAX(maxlen, p[i] -1);
+	}
+
+	if(p) {
+		free(p);
+		p = NULL;
+	}
+	return maxlen;
+}
+
+char* expand_string(char* s)
+{
+	int size = strlen(s);
+	int new_len = 2*size+1;
+
+	char* s_new = malloc((new_len + 1) * sizeof(char));
+
+	s_new[0] = '#';
+
+	for(int i=0; i<size; i++)
+	{
+		s_new[2*i + 1] = s[i];
+		s_new[2*i + 2] = '#';
+	}
+	s_new[new_len] = '\0';
+
+	return s_new;
+}
+
+int main()
+{
+	char s[5000] = {0}; // 原始字符串
+
+	char* s_new = NULL; //插入#号，构建manacher字符串
+	int len = 0;
+
+	while(scanf("%s", s) != EOF) {
+		s_new = expand_string(s);
+		len = manacher(s_new);
+
+		printf("%d\n", len);
+
+		if(s_new) {
+			free(s_new);
+			s_new = NULL;
+		}
+	}
+
+	return 0;
+}
+

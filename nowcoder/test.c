@@ -507,7 +507,7 @@ char* expand_string(char* s)
 	return s_new;
 }
 
-int main()
+int manacher_main()
 {
 	char s[5000] = {0}; // 原始字符串
 
@@ -527,5 +527,77 @@ int main()
 	}
 
 	return 0;
+}
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define MAX_N (12)
+int n;
+int state1[MAX_N];
+int index1;
+int state2[MAX_N];
+int index2;
+int state3[MAX_N];
+int index3;
+char res[20000][15];
+int resNum;
+
+int CMP( const void *a, const void *b )
+{
+    return strcmp((char *)a, (char *)b);
+//strcmp(str1,str2)，str1=str2，返回零；str1<str2，返回负数；str1>str2，返回正数。
+}
+void dfs()
+{
+    if( index1 == n )  //出站任务完成
+    {
+        int i;
+        for( i = 0; i < index1; i++ )
+            res[resNum][i] = state1[i] + '0';
+        res[resNum][i] = '\0';
+        resNum++;
+        return;
+    }
+    if( index2 != -1 )
+    {//站内存在车辆
+        state1[index1++] = state2[index2--];
+        //当前车辆出站
+        dfs();
+        //输出当前车辆出站的结果
+        state2[++index2] = state1[--index1];
+        //将上一次输出的出站车辆退到站内，让站内继续进车看下一次结果
+    }
+    if( index3 <= n )
+    {
+    //车辆未全部进站
+        state2[++index2] = state3[index3++];
+        //车辆进站执行
+        dfs();
+        index3--;
+        index2--;
+    }
+}
+
+int main()
+{
+    while( scanf("%d",&n ) != EOF){
+        index1 = 0;
+        index2 = -1;
+        index3 = 1;
+        resNum = 0;
+        int i,j;
+        for( i = 1; i <= n; i++ )
+            scanf("%d",&state3[i]);
+        dfs();
+        qsort( res, resNum, sizeof(res[0]), CMP );
+//qsort() 比较函数 res数组名，resNum数组个数，sizeof（）长度，CMP升序或降序函数；
+        for( i = 0; i < resNum; i++ ){
+            for( j = 0; j < n; j++ )
+                printf("%c ", res[i][j] );
+            puts("");
+        }
+    }
+    return 0;
 }
 

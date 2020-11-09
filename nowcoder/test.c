@@ -441,6 +441,7 @@ int palindrome1_main()
 }
 
 // manacher, p[i] - 1 为所求，原问题转化为求p[i]
+// malloc效率太低 方式测试时会超时，无法通过测试
 #define MAX(a,b) (((a)>(b))?(a):(b))
 #define MIN(a,b) (((a)<(b))?(a):(b))
 int manacher(char* str)
@@ -491,34 +492,33 @@ int manacher(char* str)
 char* expand_string(char* s)
 {
 	int size = strlen(s);
-	int new_len = 2*size+1;
+	int new_len = 2 * size + 1;
 
-	char* s_new = malloc((new_len + 1) * sizeof(char));
+	char* s_new = malloc(new_len * sizeof(char)); //2*n+2
 
 	s_new[0] = '#';
 
-	for(int i=0; i < size; i++)
+	for(int i = 0; i < size; i++)
 	{
-		s_new[2*i + 1] = s[i];
-		s_new[2*i + 2] = '#';
+		s_new[2 * i + 1] = s[i];
+		s_new[2 * i + 2] = '#';
 	}
 	s_new[new_len] = '\0';
 
 	return s_new;
 }
 
-int manacher_main()
+int manacher_test1_main()
 {
 	char s[5000] = {0}; // 原始字符串
-
-	char* s_new = NULL; //插入#号，构建manacher字符串
-	int len = 0;
+	char *s_new = NULL; //插入#号，构建manacher字符串
+	int maxlen = 0;
 
 	while(scanf("%s", s) != EOF) {
 		s_new = expand_string(s);
-		len = manacher(s_new);
+		maxlen = manacher(s_new);
 
-		printf("%d\n", len);
+		printf("%d\n", maxlen);
 
 		if(s_new) {
 			free(s_new);
@@ -527,6 +527,133 @@ int manacher_main()
 	}
 
 	return 0;
+}
+
+#define MAX(a,b) (((a)>(b))?(a):(b))
+#define MIN(a,b) (((a)<(b))?(a):(b))
+// 不用malloc，改用数组
+int manacher_array(char *str, int p[])
+{
+	int size = strlen(str);
+
+	//构建p[i]数组
+	p[0] = 1;
+
+	int id = 0;
+	int mx = 1;
+	int maxlen = -1;
+	// p[i]示意图 : mx'____i'____id____i____mx
+	// j = i' = 2*id -i
+
+	for(int i = 1; i < size; i++)
+	{
+		if(mx > i)
+			// 因为id附近（大回文串）是对称的，如果j附近对称，那么i附近也必然对称
+			//所以可以让p[i]跳过一部分字串的重复检测，直接跳到i+p[i]继续检测
+			p[i] = MIN(p[2*id - i], mx-i);
+		else
+			p[i] = 1;
+
+		// 扩大回文半径，求p[i]的最终值
+		// 左侧回文半径p[i]的值一定不能超过边界，即p[i] <= i
+		while(str[i - p[i]] == str[i + p[i]] && (p[i] <= i))
+			p[i]++;
+
+		/* 更新mx和id */
+		if(mx < i + p[i])
+		{
+			mx = i + p[i];
+			id = i;
+		}
+		maxlen = MAX(maxlen, p[i] - 1);
+	}
+
+	return maxlen;
+}
+
+char* expand_string_array(char* s)
+{
+	int len = strlen(s);
+
+	for(int i = len; i>= 0; --i){//插入'#'
+		s[2*i + 2] = s[i];
+		s[2*i + 1] = '#';
+	}
+
+	s[0] = '*';
+
+	return s;
+}
+
+int manacher_test2_main()
+{
+	char s[10000] = {0}; // 存放字符串
+	int p[10000] = {0}; // 辅助数组，存放回文长度
+
+	int maxlen = 0;
+
+	while(scanf("%s", s) != EOF) {
+		expand_string_array(s);
+		maxlen = manacher_array(s, p);
+		printf("%d\n", maxlen);
+	}
+
+	return 0;
+}
+
+// 百度百科回文数manacher代码
+int baidu_manacher_main()
+{
+	#define MAXLEN  (110000 + 10)
+	char s[MAXLEN*2] = {0};
+	int p[MAXLEN*2] = {0};
+
+	// p[i]示意图 : mx'____i'____id____i____mx
+	// j = i' = 2*id -i
+
+    while (scanf("%s", s) != EOF) {
+        int len = strlen(s);
+		int id = 0;
+		int maxlen = 0;
+
+		//插入'#'
+		for (int i = len; i >= 0; --i) {
+            s[i + i + 2] = s[i];
+            s[i + i + 1] = '#';
+        }
+
+		// 插入了len+1个'#',最终的s长度是1~len+len+1即2*len+1,首尾s[0]和s[2*len+2]要插入不同的字符
+		// 因为s [2*len + 2] = s[len] = '\0'， 所以末尾字符一定是'\0'
+		// 令s[0]='^', 由于s[2*len+2]='\0', 不等于s[0], 可以防止在while时p[i]越界
+        s[0] = '^';
+
+		int mx = p[id] + id;
+        for (int i = 2; i < 2 * len + 1; ++i) {
+
+			if (mx > i)
+				p[i] = MIN(p[ 2 * id - i], mx - i);
+            else
+				p[i] = 1;
+
+			//继续扩展
+            while (s[i - p[i]] == s[i + p[i]])
+				++p[i];
+
+			//更新id
+            if (mx < i + p[i])
+			{
+				mx = i + p[i];
+				id = i;
+			}
+
+			//更新maxlen
+            if (maxlen < p[i] - 1)
+				maxlen = p[i] - 1;
+        }
+        /* cout << maxlen - 1 << endl; */
+		printf("%d\n", maxlen);
+    }
+    return 0;
 }
 
 #include<stdio.h>
@@ -597,7 +724,6 @@ int main()
                 printf("%c ", res[i][j] );
             puts("");
         }
-    }
-    return 0;
+	}
+	return 0;
 }
-

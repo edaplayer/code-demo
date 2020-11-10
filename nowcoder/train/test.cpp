@@ -9,7 +9,7 @@ using namespace std;
 vector<vector <int>> result;
 
 // 火车调度函数，每次调度只有两种可能：进站或出站
-void schedule(list<int> in, vector<int> out, stack<int> station)
+void schedule(list<int> & in, vector<int> & out, stack<int> & station)
 {
 	if (in.empty() && station.empty()) {
 		result.push_back(out);

@@ -2,38 +2,39 @@
 #include <iostream>
 #include <vector>
 #include <stack>
+#include <list>
 #include <algorithm>
 
 using namespace std;
 vector<vector <int>> result;
 
 // 火车调度函数，每次调度只有两种可能：进站或出站
-void schedule(stack<int> in, vector<int> out, stack<int> station)
+void schedule(list<int> in, vector<int> out, stack<int> station)
 {
 	if (in.empty() && station.empty()) {
 		result.push_back(out);
 		return;
 	}
 
-	//进站分支，注意进站分支和出站分支是独立的，因为是schedule是递归函数！
+	//进站分支，注意进站分支和出站分支是独立的，因为schedule是递归函数！
 	if (!in.empty()) {
 		// 保护现场
-		int temp = in.top();
+		auto temp = in.front();
 
 		// 进站
-		station.push(in.top());
-		in.pop();
+		station.push(in.front());
+		in.pop_front();
 		schedule(in, out, station);
 
 		// 还原外部现场
-		in.push(temp);
+		in.push_front(temp);
 		station.pop();
 	}
 
-	//出站分支，注意进站分支和出站分支是独立的，因为是schedule是递归函数！
+	//出站分支，注意进站分支和出站分支是独立的，因为schedule是递归函数！
 	if (!station.empty()) {
 		// 保护现场
-		int temp = station.top();
+		auto temp = station.top();
 
 		//出站
 		out.push_back(station.top());
@@ -48,19 +49,16 @@ void schedule(stack<int> in, vector<int> out, stack<int> station)
 
 int main()
 {
-	int n = 0;
+	auto n = 0;
+	auto train_num = 0;
 	while (cin >> n) {
-		int input[n];
-		stack<int> station;
-		stack<int> in;
-		vector<int> out;
-
-		for (auto &i: input) {
-			cin >> i;
-		}
+		stack<int> station;	// 站内火车栈表
+		list<int> in;		// 等待进站火车链表
+		vector<int> out;	// 已出站火车链表
 
 		for (auto i = n; i > 0; i--) {
-			in.push(input[i - 1]);
+			cin >> train_num;
+			in.push_back(train_num);
 		}
 
 		schedule(in, out, station);

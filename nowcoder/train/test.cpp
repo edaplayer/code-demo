@@ -6,13 +6,13 @@
 #include <algorithm>
 
 using namespace std;
-vector<vector <int>> result;
+vector<vector <int>> answer;
 
 // 火车调度函数，每次调度只有两种情况：进站或出站
 void schedule(deque<int> & in, vector<int> & out, stack<int> & station)
 {
 	if (in.empty() && station.empty()) {
-		result.push_back(out);
+		answer.push_back(out);
 		return;
 	}
 
@@ -63,15 +63,15 @@ int main()
 		}
 
 		schedule(in, out, station);
-		sort(result.begin(), result.end());
+		sort(answer.begin(), answer.end());
 
-		for (auto &i : result) {
+		for (auto &i : answer) {
 			for (auto &j : i) {
 				cout << j << " ";
 			}
 			cout << endl;
 		}
-		result.clear();
+		answer.clear();
 	}
 	return 0;
 }

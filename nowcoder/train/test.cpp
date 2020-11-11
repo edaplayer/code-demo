@@ -2,14 +2,14 @@
 #include <iostream>
 #include <vector>
 #include <stack>
-#include <list>
+#include <deque>
 #include <algorithm>
 
 using namespace std;
 vector<vector <int>> result;
 
 // 火车调度函数，每次调度只有两种可能：进站或出站
-void schedule(list<int> & in, vector<int> & out, stack<int> & station)
+void schedule(deque<int> & in, vector<int> & out, stack<int> & station)
 {
 	if (in.empty() && station.empty()) {
 		result.push_back(out);
@@ -53,7 +53,7 @@ int main()
 	auto train_num = 0;
 	while (cin >> n) {
 		stack<int> station;	// 站内火车栈表
-		list<int> in;		// 等待进站火车链表
+		deque<int> in;		// 等待进站火车链表
 		vector<int> out;	// 已出站火车链表
 
 		for (auto i = n; i > 0; i--) {

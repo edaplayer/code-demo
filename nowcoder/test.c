@@ -604,56 +604,56 @@ int manacher_test2_main()
 // 百度百科回文数manacher代码
 int baidu_manacher_main()
 {
-	#define MAXLEN  (110000 + 10)
+#define MAXLEN  (110000 + 10)
 	char s[MAXLEN*2] = {0};
 	int p[MAXLEN*2] = {0};
 
 	// p[i]示意图 : mx'____i'____id____i____mx
 	// j = i' = 2*id -i
 
-    while (scanf("%s", s) != EOF) {
-        int len = strlen(s);
+	while (scanf("%s", s) != EOF) {
+		int len = strlen(s);
 		int id = 0;
 		int maxlen = 0;
 
 		//插入'#'
 		for (int i = len; i >= 0; --i) {
-            s[i + i + 2] = s[i];
-            s[i + i + 1] = '#';
-        }
+			s[i + i + 2] = s[i];
+			s[i + i + 1] = '#';
+		}
 
 		// 插入了len+1个'#',最终的s长度是1~len+len+1即2*len+1,首尾s[0]和s[2*len+2]要插入不同的字符
 		// 因为s [2*len + 2] = s[len] = '\0'， 所以末尾字符一定是'\0'
 		// 令s[0]='^', 由于s[2*len+2]='\0', 不等于s[0], 可以防止在while时p[i]越界
-        s[0] = '^';
+		s[0] = '^';
 
 		int mx = p[id] + id;
-        for (int i = 2; i < 2 * len + 1; ++i) {
+		for (int i = 2; i < 2 * len + 1; ++i) {
 
 			if (mx > i)
 				p[i] = MIN(p[ 2 * id - i], mx - i);
-            else
+			else
 				p[i] = 1;
 
 			//继续扩展
-            while (s[i - p[i]] == s[i + p[i]])
+			while (s[i - p[i]] == s[i + p[i]])
 				++p[i];
 
 			//更新id
-            if (mx < i + p[i])
+			if (mx < i + p[i])
 			{
 				mx = i + p[i];
 				id = i;
 			}
 
 			//更新maxlen
-            if (maxlen < p[i] - 1)
+			if (maxlen < p[i] - 1)
 				maxlen = p[i] - 1;
-        }
-        /* cout << maxlen - 1 << endl; */
+		}
+		/* cout << maxlen - 1 << endl; */
 		printf("%d\n", maxlen);
-    }
-    return 0;
+	}
+	return 0;
 }
 
 #include<stdio.h>
@@ -672,58 +672,58 @@ int resNum;
 
 int CMP( const void *a, const void *b )
 {
-    return strcmp((char *)a, (char *)b);
-//strcmp(str1,str2)，str1=str2，返回零；str1<str2，返回负数；str1>str2，返回正数。
+	return strcmp((char *)a, (char *)b);
+	//strcmp(str1,str2)，str1=str2，返回零；str1<str2，返回负数；str1>str2，返回正数。
 }
 void dfs()
 {
-    if( index1 == n )  //出站任务完成
-    {
-        int i;
-        for( i = 0; i < index1; i++ )
-            res[resNum][i] = state1[i] + '0';
-        res[resNum][i] = '\0';
-        resNum++;
-        return;
-    }
-    if( index2 != -1 )
-    {//站内存在车辆
-        state1[index1++] = state2[index2--];
-        //当前车辆出站
-        dfs();
-        //输出当前车辆出站的结果
-        state2[++index2] = state1[--index1];
-        //将上一次输出的出站车辆退到站内，让站内继续进车看下一次结果
-    }
-    if( index3 <= n )
-    {
-    //车辆未全部进站
-        state2[++index2] = state3[index3++];
-        //车辆进站执行
-        dfs();
-        index3--;
-        index2--;
-    }
+	if( index1 == n )  //出站任务完成
+	{
+		int i;
+		for( i = 0; i < index1; i++ )
+			res[resNum][i] = state1[i] + '0';
+		res[resNum][i] = '\0';
+		resNum++;
+		return;
+	}
+	if( index2 != -1 )
+	{//站内存在车辆
+		state1[index1++] = state2[index2--];
+		//当前车辆出站
+		dfs();
+		//输出当前车辆出站的结果
+		state2[++index2] = state1[--index1];
+		//将上一次输出的出站车辆退到站内，让站内继续进车看下一次结果
+	}
+	if( index3 <= n )
+	{
+		//车辆未全部进站
+		state2[++index2] = state3[index3++];
+		//车辆进站执行
+		dfs();
+		index3--;
+		index2--;
+	}
 }
 
 int main()
 {
-    while( scanf("%d",&n ) != EOF){
-        index1 = 0;
-        index2 = -1;
-        index3 = 1;
-        resNum = 0;
-        int i,j;
-        for( i = 1; i <= n; i++ )
-            scanf("%d",&state3[i]);
-        dfs();
-        qsort( res, resNum, sizeof(res[0]), CMP );
-//qsort() 比较函数 res数组名，resNum数组个数，sizeof（）长度，CMP升序或降序函数；
-        for( i = 0; i < resNum; i++ ){
-            for( j = 0; j < n; j++ )
-                printf("%c ", res[i][j] );
-            puts("");
-        }
+	while( scanf("%d",&n ) != EOF){
+		index1 = 0;
+		index2 = -1;
+		index3 = 1;
+		resNum = 0;
+		int i,j;
+		for( i = 1; i <= n; i++ )
+			scanf("%d",&state3[i]);
+		dfs();
+		qsort( res, resNum, sizeof(res[0]), CMP );
+		//qsort() 比较函数 res数组名，resNum数组个数，sizeof（）长度，CMP升序或降序函数；
+		for( i = 0; i < resNum; i++ ){
+			for( j = 0; j < n; j++ )
+				printf("%c ", res[i][j] );
+			puts("");
+		}
 	}
 	return 0;
 }

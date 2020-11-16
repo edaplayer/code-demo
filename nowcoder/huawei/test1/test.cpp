@@ -18,11 +18,7 @@ int main()
 
 	while (cin >> s) {
 		cin >> k;
-		// cout << "s = "<< s << endl;
-		// cout << "k = "<< k << endl;
-		// cout << "sort_s = "<<sort_s << endl;
 		int len = s.length();
-		// cout << "len" << len <<endl;
 		for (i = 0; i < len ; ++i) {
 			if (!hash[s[i]]) {
 				hash[s[i]] = i + 1;
@@ -31,7 +27,6 @@ int main()
 		sort(s.begin(), s.end());
 
 		if(k > len) {
-			// cout << " k too large\n";
 			target = len -1;
 		} else {
 			target = k -1;

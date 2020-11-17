@@ -1,23 +1,22 @@
 CC      := gcc
-CXX  := g++ -std=c++11
-# CXX     :=g++
+CXX  := g++ -std=c++11 -ggdb
 
 CFILE   := $(wildcard *.c)
-CPPFILE := $(wildcard *.cpp)
+CXXFILE := $(wildcard *.cpp)
 
 COBJ    := $(patsubst %.c, %.o, ${CFILE})
-CPPOBJ  := $(patsubst %.cpp, %.o, ${CPPFILE})
+CXXOBJ  := $(patsubst %.cpp, %.o, ${CXXFILE})
 
-PREFILE := $(patsubst %.o, %.i, ${COBJ})
-CXXPRE  := $(patsubst %.o, %.i, ${CPPOBJ})
+CPRE := $(patsubst %.o, %.i, ${COBJ})
+CXXPRE  := $(patsubst %.o, %.i, ${CXXOBJ})
 CASM := $(patsubst %.o, %.s, ${COBJ})
-CXXASM  := $(patsubst %.o, %.s, ${CPPOBJ})
+CXXASM  := $(patsubst %.o, %.s, ${CXXOBJ})
 
 # $(info CFILE=${CFILE})
-# $(info CPPFILE=${CPPFILE})
+# $(info CXXFILE=${CXXFILE})
 # $(info COBJ=${COBJ})
-# $(info CPPOBJ=${CPPOBJ})
-# $(info PREFILE=${PREFILE})
+# $(info CXXOBJ=${CXXOBJ})
+# $(info CPRE=${CPRE})
 # $(info CXXPRE=${CXXPRE})
 # $(info CASM=${CASM})
 # $(info CXXASM=${CXXASM})
@@ -28,35 +27,35 @@ all: ${TARGET}
 
 .PHONY: clean distclean
 
-$(PREFILE):%.i:%.c
+$(CPRE):%.i:%.c
 	$(info Preprocess: build main.i)
-	$(CC) -E -o $@ $<
+	$(CC) -E $< -o $@
 
 $(CXXPRE):%.i:%.cpp
 	$(info Preprocess: build main.i)
-	$(CXX) -E -o $@ $<
+	$(CXX) -E $< -o $@
 
 $(CASM):%.s:%.i
 	$(info Compile: build main.s)
-	$(CC) -S -o $@ $<
+	$(CC) -S $< -o $@
 
 $(CXXASM):%.s:%.i
 	$(info Compile: build main.s)
-	$(CXX) -S -o $@ $<
+	$(CXX) -S $< -o $@
 
 $(COBJ):%.o:%.s
 	$(info Assemble: build main.o)
-	$(CC) -c -o $@ $<
+	$(CC) -c $< -o $@
 	@objdump -DrwC -Mintel $@ > $(patsubst %.o,%.o.asm,$@)
 
-$(CPPOBJ):%.o:%.s
+$(CXXOBJ):%.o:%.s
 	$(info Assemble: build main.o)
-	$(CXX) -c -o $@ $<
+	$(CXX) -c $< -o $@
 	@objdump -DrwC -Mintel $@ > $(patsubst %.o,%.o.asm,$@)
 
-$(TARGET):$(COBJ) $(CPPOBJ)
+$(TARGET):$(COBJ) $(CXXOBJ)
 	$(info Link: build main)
-	$(CXX) -o $@ $^ -Wl,-Map=gcc.map
+	$(CXX) $^ -Wl,-Map=gcc.map -o $@
 	@objdump -D $@ > $(patsubst %,%.asm,$@)
 
 clean:

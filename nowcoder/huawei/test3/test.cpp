@@ -8,8 +8,8 @@ vector<string> keymap = {" ", ",.", "abc", "def", "ghi",
                          "jkl", "mno", "pqrs", "tuv", "wxyz"};
 int main() {
 	int n = 0;
-	string s;
 	int mode = 0;// 0: digital, 1: english
+	string s;
 
 	while (cin >> s) {
 		n = s.length();
@@ -22,14 +22,7 @@ int main() {
 				} else {
 					int key = s[i];
 					int j = 1;
-					char *pnext = &s[i + 1];
-
-					while (*pnext != '/' &&
-						   *pnext == key &&
-						   *pnext != '#' &&
-						   i + j < n) //不确定c++的string是否自带'\0'结束符号，保险起见还是限制一下防止越界
-					{
-						pnext++;
+					while (s[i + j] == key) {
 						j++;
 					}
 

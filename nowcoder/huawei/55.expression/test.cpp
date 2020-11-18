@@ -11,10 +11,9 @@ int pos;
 int compute(string & data)
 {
 	int len = data.length();
-	std::stack<int> st;
-	int top = -1;
 	int num = 0;
 	char flag = '+';
+	stack<int> st;
 
 	while (pos < len) {
 		if (data[pos] == '{' || data[pos] == '[' || data[pos] == '(') {

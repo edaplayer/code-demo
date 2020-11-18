@@ -1,64 +1,81 @@
+#include <iostream>
 #include <cstdio>
 #include <cstring>
 #include <cctype>
+#include <stack>
+
+using namespace std;
 
 int pos;
 
-int compute(char* data)
+int compute(string & data)
 {
-	int len = strlen(data);
-	int stack[1000];
+	int len = data.length();
+	std::stack<int> st;
 	int top = -1;
 	int num = 0;
 	char flag = '+';
 
 	while (pos < len) {
-		if (data[pos]=='{'||data[pos]=='['||data[pos]=='(') {
+		if (data[pos] == '{' || data[pos] == '[' || data[pos] == '(') {
 			pos++;
-			num=compute(data);
+			num = compute(data);
 		}
 
-		while (pos < len&&isdigit(data[pos])) {
-			num = num*10 + data[pos]-'0';
+		while (pos < len && isdigit(data[pos])) {
+			num = num * 10 + data[pos] -'0';
 			pos++;
 		}
 
 		switch (flag) {
 		case '+':
-			stack[++top] = num; break;
+			st.push(num);
+			break;
 		case '-':
-			stack[++top] = -num; break;
+			st.push(-num);
+			break;
 		case '*':
-			stack[top] *= num; break;
+			{
+				int temp = st.top();
+				temp *= num;
+				st.pop();
+				st.push(temp);
+				break;
+			}
 		case '/':
-			stack[top] /= num; break;
+			{
+				int temp = st.top();
+				temp /= num;
+				st.pop();
+				st.push(temp);
+				break;
+			}
 		}
 
 		num = 0;
 		flag = data[pos];
-		if (data[pos]=='}'||data[pos]==']'||data[pos]==')') {
+		if (data[pos] == '}' || data[pos] == ']'|| data[pos] == ')') {
 			pos++;
 			break;
 		}
 		pos++;
 	}
 
-	int res = 0;
-
-	for (int i = 0;i <= top; i++) {
-		res += stack[i];
+	int sum = 0;
+	while (st.size()) {
+		sum += st.top();
+		st.pop();
 	}
-	return res;
+	return sum;
 }
 
 int main()
 {
-	char data[1000];
+	string data;
 
-	while(scanf("%s",data) != EOF){
+	while (cin >> data) {
 		pos = 0;
-		int res = compute(data);
-		printf("%d\n",res);
+		cout << compute(data) << endl;
 	}
 	return 0;
 }

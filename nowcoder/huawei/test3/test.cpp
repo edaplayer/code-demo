@@ -27,9 +27,9 @@ int main() {
 					}
 
 					key -= '0';
-					int key_shift = (j) % (keymap[key].length());
+					int key_shift = j == 0 ? 0 : j % (keymap[key].length());
 					cout << keymap[key][key_shift];
-					i += (j);
+					i += j;
 				}
 			}
 		}

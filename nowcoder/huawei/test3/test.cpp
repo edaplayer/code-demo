@@ -21,15 +21,15 @@ int main() {
 					cout << s[i];
 				} else {
 					int key = s[i];
-					int j = 1;
-					while (s[i + j] == key) {
+					int j = 0;
+					while (s[i + j + 1] == key) {
 						j++;
 					}
 
 					key -= '0';
-					int key_shift = (j-1)%(keymap[key].length());
+					int key_shift = (j) % (keymap[key].length());
 					cout << keymap[key][key_shift];
-					i += (j-1);
+					i += (j);
 				}
 			}
 		}

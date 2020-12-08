@@ -9,10 +9,10 @@
 END{
     for (i in a) {
         if (!b[i]) {
-            cmd = sprintf("echo %s=%s >> %s",i, a[i], ARGV[2])
+            cmd = sprintf("echo %s%s%s >> %s",i, FS, a[i], ARGV[2])
             system(cmd);
         } else if (a[i] != b[i]) {
-            cmd = sprintf("sed -i -r 's/(%s).*%s/\\1=%s/g' %s", i, b[i], a[i], ARGV[2])
+            cmd = sprintf("sed -i -r 's/(%s).*%s/\\1%s%s/g' %s", i, b[i], FS, a[i], ARGV[2])
             system(cmd);
         }
     }

@@ -8,9 +8,8 @@
 
 END{
     for (i in a) {
-        if (!b[i]) {
-            cmd = sprintf("echo %s%s%s >> %s",i, FS, a[i], ARGV[2])
-            system(cmd);
+        if (b[i] == "") {
+            print i FS a[i] >> ARGV[2];
         } else if (a[i] != b[i]) {
             cmd = sprintf("sed -i -r 's#(%s).*%s#\\1%s%s#g' %s", i, b[i], FS, a[i], ARGV[2])
             system(cmd);

@@ -3,10 +3,13 @@
 # Author: Edward.Tang
 # Mail:   edaplayer@163.com
 # Function: 同步文件1的内核配置到文件2
+
 {
     key = gensub(/#|\s/, "", "g", $1);
-    if (NR==FNR)
-    {
+
+    if(key == "") next;
+
+    if (NR==FNR) {
         if (!/^\s*#/) {
             a[key]=$2;
         } else {

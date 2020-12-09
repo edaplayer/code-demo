@@ -1,4 +1,8 @@
 #!/usr/bin/env -S gawk -F= -f
+# File:   sync_projectconfig.awk
+# Author: Edward.Tang
+# Mail:   edaplayer@163.com
+# Function: 同步文件1的配置到文件2
 {
     key = gensub(/\s/, "", "g", $1);
     if (NR==FNR && (!/^\s*#/)) {

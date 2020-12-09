@@ -1,4 +1,8 @@
 #!/usr/bin/env -S gawk -F"=|is not set" -f
+# File:   debug.awk
+# Author: Edward.Tang
+# Mail:   edaplayer@163.com
+# Function: 同步文件1的内核配置到文件2(调试版本)
 {
     key = gensub(/#|\s/, "", "g", $1);
     if (NR==FNR)

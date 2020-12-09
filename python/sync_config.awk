@@ -13,7 +13,7 @@ END{
         if (b[i] == "") {
             print i FS a[i] >> ARGV[2];
         } else if (a[i] != b[i]) {
-            cmd = sprintf("sed -i -r 's#(%s).*%s#\\1%s%s#g' %s", i, b[i], FS, a[i], ARGV[2])
+            cmd = sprintf("sed -i -r 's#\\s*(%s)\\s*%s#\\1%s%s#g' %s", i, b[i], FS, a[i], ARGV[2])
             system(cmd);
         }
     }

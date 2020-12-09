@@ -27,7 +27,7 @@ END {
                 print i "=" a[i] >> ARGV[2];
             } else {
                 print "c2:"i" "c2[i]
-                cmd = sprintf("sed -i -r 's~# (%s) is not set~\\1=%s~' %s", i, a[i], ARGV[2]);
+                cmd = sprintf("sed -i -r 's~\\s*#\\s*(%s) is not set~\\1=%s~' %s", i, a[i], ARGV[2]);
                 print "cmd="cmd
                 system(cmd);
             }
@@ -35,7 +35,7 @@ END {
             print "ai != bi"
             print "ai:" i "=" a[i]
             print "bi:" i "=" b[i]
-            cmd = sprintf("sed -i -r 's~(%s).*=.*~\\1=%s~' %s", i, a[i], ARGV[2]);
+            cmd = sprintf("sed -i -r 's~\\s*(%s)\\s*=.*~\\1=%s~' %s", i, a[i], ARGV[2]);
             print "cmd="cmd
             system(cmd);
         }
@@ -44,7 +44,7 @@ END {
         print "c1=" i
         if (b[i] != "") {
             print "bi=" b[i]
-            cmd = sprintf("sed -i -r 's~(%s).*%s~# \\1 is not set~' %s", i, b[i], ARGV[2]);
+            cmd = sprintf("sed -i -r 's~\\s*(%s).*%s~# \\1 is not set~' %s", i, b[i], ARGV[2]);
             print "cmd="cmd
             system(cmd);
         }

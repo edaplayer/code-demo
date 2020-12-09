@@ -23,17 +23,17 @@ END {
             if (c2[i] == "") {
                 print i "=" a[i] >> ARGV[2];
             } else {
-                cmd = sprintf("sed -i -r 's~# (%s) is not set~\\1=%s~' %s", i, a[i], ARGV[2]);
+                cmd = sprintf("sed -i -r 's~\\s*#\\s*(%s) is not set~\\1=%s~' %s", i, a[i], ARGV[2]);
                 system(cmd);
             }
         } else if (a[i] != b[i]) {
-            cmd = sprintf("sed -i -r 's~(%s).*=.*~\\1=%s~' %s", i, a[i], ARGV[2]);
+            cmd = sprintf("sed -i -r 's~\\s*(%s)\\s*=.*~\\1=%s~' %s", i, a[i], ARGV[2]);
             system(cmd);
         }
     }
     for (i in c1) {
         if (b[i] != "") {
-            cmd = sprintf("sed -i -r 's~(%s).*%s~# \\1 is not set~' %s", i, b[i], ARGV[2]);
+            cmd = sprintf("sed -i -r 's~\\s*(%s).*%s~# \\1 is not set~' %s", i, b[i], ARGV[2]);
             system(cmd);
         }
     }

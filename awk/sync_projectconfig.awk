@@ -5,6 +5,7 @@
 # Function: 同步文件1的配置到文件2
 {
     key = gensub(/\s/, "", "g", $1);
+    if(key == "") next;
     if (NR==FNR && (!/^\s*#/)) {
         a[key]=$2;
     } else {

@@ -1,19 +1,18 @@
 #!/usr/bin/env -S gawk -F"=|is not set" -f
 {
+    key = gensub(/#|\s/, "", "g", $1);
     if (NR==FNR)
     {
-        if (!/^#/) {
-            a[$1]=$2;
+        if (!/^\s*#/) {
+            a[key]=$2;
         } else {
-            key = gensub(/#| /, "", "g", $1);
             print "c1 key=" key
             c1[key]="is not set";
         }
     } else {
-        if(!/^#/) {
-            b[$1]=$2;
+        if(!/^\s*#/) {
+            b[key]=$2;
         } else {
-            key = gensub(/#| /, "", "g", $1);
             print "c2 key=" key
             c2[key]="is not set";
         }

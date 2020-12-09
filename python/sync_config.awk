@@ -1,9 +1,10 @@
 #!/usr/bin/env -S gawk -F= -f
 {
+    key = gensub(/\s/, "", "g", $1);
     if (NR==FNR && (!/^\s*#/)) {
-        a[$1]=$2;
+        a[key]=$2;
     } else {
-        b[$1]=$2;
+        b[key]=$2;
     }
 }
 

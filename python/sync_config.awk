@@ -1,9 +1,10 @@
 #!/usr/bin/env -S gawk -F= -f
 {
-    if (NR==FNR)
+    if (NR==FNR && (!/^\s*#/)) {
         a[$1]=$2;
-    else
+    } else {
         b[$1]=$2;
+    }
 }
 
 END{

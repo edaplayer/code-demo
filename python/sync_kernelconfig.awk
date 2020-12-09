@@ -2,14 +2,14 @@
 {
     if (NR==FNR)
     {
-        if (!/^#/) {
+        if (!/^\s*#/) {
             a[$1]=$2;
         } else {
             key = gensub(/#| /, "", "g", $1);
             c1[key]="is not set";
         }
     } else {
-        if(!/^#/) {
+        if(!/^\s*#/) {
             b[$1]=$2;
         } else {
             key = gensub(/#| /, "", "g", $1);

@@ -13,7 +13,7 @@ END{
     for (i in a) {
         if (b[i] == "") {
             print "bi = empty, append to end of file:" i"="a[i];
-            print i"="a[i] >> "2.txt";
+            print i"="a[i] >> ARGV[2]; close(ARGV[2]);
             # system("echo " i "=" a[i] ">>" ARGV[2]);
         } else if (a[i] != b[i]) {
             cmd = sprintf("sed -i -r 's@(%s)\\s*=%s@\\1=%s@' %s", i, b[i], a[i], ARGV[2]);

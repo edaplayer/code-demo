@@ -16,8 +16,7 @@
 END{
     for (i in a) {
         if (b[i] == "") {
-            # print i FS a[i] >> ARGV[2]; # awk的print有bug，在某些情况下会写入失败
-            system("echo " i "=" a[i] ">>" ARGV[2]);
+            print i FS a[i] >> ARGV[2]; close(ARGV[2]); # awk写入文件后必须close
         } else if (a[i] != b[i]) {
             cmd = sprintf("sed -i -r 's#\\s*(%s)\\s*=.*#\\1=%s#g' %s", i, a[i], ARGV[2])
             system(cmd);

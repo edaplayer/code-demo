@@ -30,8 +30,8 @@ END {
     for (i in a1) {
         if (a2[i] == "") {
             if (c2[i] == "") {
-                # print i "=" a1[i] >> ARGV[2];
-                system("echo " i "=" a1[i] ">>" ARGV[2]);
+                print i "=" a1[i] >> ARGV[2]; close(ARGV[2]);
+                # system("echo " i "=" a1[i] ">>" ARGV[2]);
             } else {
                 # cmd = sprintf("sed -i -r 's~\\s*#\\s*(%s) is not set~\\1=%s~' %s", i, a1[i], ARGV[2]);
                 cmd = sprintf("sed -i -r 's~%s~%s=%s~' %s", line[i], i, a1[i], ARGV[2]);

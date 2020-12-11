@@ -29,7 +29,7 @@ function set_value(array, comment, k, v)
 END {
     for (i in a1) {
         if (a2[i] == "") {
-            if (c2[i] == "") {
+            if (line[i] == "" && c2[i] == "") {
                 print i "=" a1[i] >> ARGV[2]; close(ARGV[2]);
                 # system("echo " i "=" a1[i] ">>" ARGV[2]);
             } else {

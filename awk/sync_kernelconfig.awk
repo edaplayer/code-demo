@@ -1,4 +1,4 @@
-#!/usr/bin/env -S gawk -F"=|is not set" -f
+#!/usr/bin/env -S gawk -F"=|is" -f
 # File:   sync_kernelconfig.awk
 # Author: Edward.Tang
 # Mail:   edaplayer@163.com
@@ -11,24 +11,25 @@
 
     if (NR==FNR) {
         if (!/^\s*#/) {
-            a[key]=$2;
+            a[key] = $2;
         } else {
-            c1[key]="is not set";
+            c1[key] = $2;
         }
     } else {
         if(!/^\s*#/) {
-            b[key]=$2;
+            b[key] = $2;
         } else {
-            c2[key]="is not set";
+            c2[key] = $2;
         }
+        line[key] = $0; # line data of file2
     }
 }
 
 END {
     for (i in a) {
         if (b[i] == "") {
-            if (c2[i] == "") {
-                print i "=" a[i] >> ARGV[2];
+            if (c2[i] == "" && line[i] == "") {
+                print i "=" a[i] >> ARGV[2]; close(ARGV[2]);
             } else {
                 cmd = sprintf("sed -i -r 's~\\s*#\\s*(%s) is not set~\\1=%s~' %s", i, a[i], ARGV[2]);
                 system(cmd);

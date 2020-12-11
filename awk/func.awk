@@ -7,15 +7,14 @@
 function set_value(array, comment, k, v)
 {
     if (!/^\s*#/) {
-        array[k]=v;
+        array[k] = v;
     } else {
-        comment[k]=$2;
+        comment[k] = $2;
     }
 }
 
 {
     key = gensub(/#|\s/, "", "g", $1);
-
     if (key == "") next; # 跳过空行
 
     if (NR==FNR) {
@@ -29,9 +28,8 @@ function set_value(array, comment, k, v)
 END {
     for (i in a1) {
         if (a2[i] == "") {
-            if (line[i] == "" && c2[i] == "") {
+            if (c2[i] == "" && line[i] == "") {
                 print i "=" a1[i] >> ARGV[2]; close(ARGV[2]);
-                # system("echo " i "=" a1[i] ">>" ARGV[2]);
             } else {
                 # cmd = sprintf("sed -i -r 's~\\s*#\\s*(%s) is not set~\\1=%s~' %s", i, a1[i], ARGV[2]);
                 cmd = sprintf("sed -i -r 's~%s~%s=%s~' %s", line[i], i, a1[i], ARGV[2]);

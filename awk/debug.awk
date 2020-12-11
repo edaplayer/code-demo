@@ -8,25 +8,26 @@
     if (NR==FNR)
     {
         if (!/^\s*#/) {
-            a[key]=$2;
+            a[key] = $2;
         } else {
             print "c1 key=" key
-            c1[key]="is not set";
+            c1[key] = "is not set";
         }
     } else {
         if(!/^\s*#/) {
-            b[key]=$2;
+            b[key] = $2;
         } else {
             print "c2 key=" key
-            c2[key]="is not set";
+            c2[key] = "is not set";
         }
+        line[key] = $0; # line data of file2
     }
 }
 
 END {
     for (i in a) {
         if (b[i] == "") {
-            if (c2[i] == "") {
+            if (c2[i] == "" && line[i] == "") {
                 print "bi = \"\", append to end of file:" i"="a[i]
                 print i "=" a[i] >> ARGV[2];
             } else {

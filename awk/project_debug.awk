@@ -8,19 +8,18 @@
     # if(key == "") next;
 
     if (NR==FNR && (!/^\s*#/)) {
-        a[key]=$2;
+        a[key] = $2;
     } else {
-        b[key]=$2;
+        b[key] = $2;
+        line[key] = $0; # line data of file2
     }
 }
 
 END{
     for (i in a) {
-        if (b[i] == "") {
+        if (b[i] == "" && line[i] == "") {
             print "bi = empty, append to end of file:" i"="a[i];
-            print i"="a[i] >> ARGV[2];
-            print(i"="a[i]) >> ARGV[2];
-            printf("%s=%s", i, a[i]) >> ARGV[2];
+            print i FS a[i] >> ARGV[2]; close(ARGV[2]); # awk写入文件后必须close
             # cmd = sprintf("echo %s=%s >> %s", i, a[i], ARGV[2]);
             # print "cmd="cmd;
             # system(cmd);

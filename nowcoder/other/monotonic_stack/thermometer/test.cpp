@@ -24,24 +24,21 @@ int main()
 		vector<int> temperature(n);
 		cout << n << endl;
 
-		for(auto &i : temperature)
+		for(auto &t : temperature)
 		{
-			cin >> i;
-			cout << i << " ";
+			cin >> t;
+			cout << t << " ";
 		}
 
 		cout <<endl;
 
-		// vector<int> ltor(n);
-
 		stack<int> st;
 		int count = 1;
 
-		//从左往右记录遍历所有位置，ltor[i]是记录在i处往左看，低于i处温度的数据个数。
+		//从左往右记录遍历所有位置，st.size()是记录在i处往左看，低于i处温度的数据个数
+		//因为要保证温度数据单调递增，才能继续使用当前温度计
+		//如果st为空，则说明温度数据无法单调递增了，要更换新的温度计
 		for (int i = 0; i < n; i++) {
-
-			// ltor[i] = st.size(); //
-
 			while (!st.empty() && st.top() >= temperature[i]) {
 				st.pop();
 				if(st.empty())

@@ -24,10 +24,15 @@ int main()
 		vector<int> temperature(n);
 		cout << n << endl;
 
-		for(auto &t : temperature)
-		{
-			cin >> t;
-			cout << t << " ";
+		// for(auto &t : temperature)
+		// {
+			// cin >> t;
+			// cout << t << " ";
+		// }
+
+		for (int i = 0; i < n; ++i) {
+			cin >> temperature[i];
+			cout << temperature[i] << " ";
 		}
 
 		cout <<endl;

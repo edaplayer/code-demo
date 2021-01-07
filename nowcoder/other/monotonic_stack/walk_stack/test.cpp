@@ -27,7 +27,7 @@ int main()
 		vector<int> ltor(n);
 		vector<int> rtol(n);
 
-		stack<int> s1;
+		stack<int> s1; //从左往右记录，单调递减，栈顶为往左看时，能看到的最低楼层
 
 		//从左往右记录遍历所有位置，ltor[i]是记录站在i栋楼处，能看到左边的多少栋楼
 		for (int i = 0; i < n; i++) {

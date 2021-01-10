@@ -1,5 +1,4 @@
-// 公共子串计算
-// 查找字符串最长公共子串
+// 分割字符串
 #include <iostream>
 #include <vector>
 #include <algorithm>

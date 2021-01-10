@@ -54,11 +54,27 @@ int lengthOfLongestSubstring(string s) {
 	return Max;
 }
 
+// 和上面的解法思路相同
+int getlen(string s){
+	int pre = 0, Max = 0;
+	map<char, int> dict;
+	for(int i = 0; i < s.length(); i++){
+		if(dict.find(s[i]) == dict.end() || dict[s[i]] < pre)//没有重复或者重复字符小于当前字符串起点坐标，说明当前字符串内部一定没有重复字符
+			Max = max(Max, i - pre+1);
+		else
+			pre = dict[s[i]]; // 有重复字符，则重新设定起点坐标
+
+		dict[s[i]] = i+1; //记录字符坐标
+	}
+	return Max;
+}
+
 int main(int argc, char *argv[])
 {
 	string s;
 	while(cin >> s) {
-		cout << lengthOfLongestSubstring(s) << endl;
+		// cout << lengthOfLongestSubstring(s) << endl;
+		cout << getlen(s) << endl;
 	}
 
 	return 0;

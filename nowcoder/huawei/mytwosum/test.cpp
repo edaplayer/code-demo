@@ -1,11 +1,14 @@
 #include <iostream>
 #include <vector>
-#include <cctype>
 #include <map>
 
-using namespace std;
+// using namespace std;
+using std::cout;
+using std::endl;
+using std::vector;
+using std::map;
 
-#define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
+#define ARRAY_SIZE(a) (sizeof(a)/sizeof((a)[0]))
 
 vector<int> twosum(int * nums, int numsSize, int target) {
 	vector<int> result;

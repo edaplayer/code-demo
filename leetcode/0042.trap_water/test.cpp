@@ -36,14 +36,14 @@ int main()
 				st.pop();
 				if(st.empty()) break;
 				if(height[toph] == height[st.top()]) continue; //这句可加可不加
-                int width = i - st.top() - 1; // 求出凹槽的宽度
+				int width = i - st.top() - 1; // 求出凹槽的宽度
 				cout << "width = " << width << endl;
 				cout << "st.top = " << height[st.top()] << endl;
-                int h = min(height[st.top()],height[i]);//top柱子的高度，注意top已经取出过一次了，短板效应，取较低的
+				int h = min(height[st.top()],height[i]);//top柱子的高度，注意top已经取出过一次了，短板效应，取较低的
 				cout << "h = " << h << endl;
-                int add = (h-height[toph])*width;
+				int add = (h-height[toph])*width;
 				cout << "add = " << add << endl;
-                res += (h-height[toph])*width;
+				res += (h-height[toph])*width;
 				cout << "res = " << res << endl;
 
 			}
@@ -63,8 +63,8 @@ int main1()
 
 		// for(auto &t : height)
 		// {
-			// cin >> t;
-			// cout << t << " ";
+		// cin >> t;
+		// cout << t << " ";
 		// }
 
 		for (int i = 0; i < n; ++i) {
@@ -79,7 +79,7 @@ int main1()
 		int rightMax = height[n - 1];
 
 		for (int i = 1, j = n-2; i <= j;) {
-        // 短板效应, 哪边较小就可以确定哪一边
+			// 短板效应, 哪边较小就可以确定哪一边
 			if (leftMax <= rightMax) {//可以确定左指针的容量了, 因为即使右边有更高的,但是因为左边是短板, 右边再高也没用
 				int lm = max(0, leftMax - height[i]);
 				cout << "lm = " << lm << endl;

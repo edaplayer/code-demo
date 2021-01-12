@@ -36,9 +36,9 @@ int getSubStrlen(string str)
 // 非常精妙的算法
 int lengthOfLongestSubstring(string s) {
 	int i, Max=0, pre=-1;
-	int book[256] = {-1};
+	int book[256];
 	// map<char,int> book;
-	// for (i=0;i<s.length();i++) book[s[i]]=-1;
+	for (i=0;i<s.length();i++) book[s[i]]=-1; //必须用for初始化数组
 	for (i=0; i < s.length(); i++)
 	{
 		// pre = max(pre, book[s[i]]);

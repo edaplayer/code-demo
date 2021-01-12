@@ -52,7 +52,6 @@ public:
 		ListNode * p1 = l1;
 		ListNode * p2 = l2;
 
-		int sum;
 		int carry = 0;
 
 		ListNode* phead = nullptr;
@@ -65,11 +64,9 @@ public:
 
 			carry = sum >= 10 ? 1 : 0;
 
-			int num = (int)(sum%10);
+			*pp = new ListNode(sum%10);
 
-			*pp = new ListNode(num);
 			pp = &(*pp)->next;
-
 			p1 = p1 == nullptr ? nullptr : p1->next;
 			p2 = p2 == nullptr ? nullptr : p2->next;
 		}

@@ -8,9 +8,11 @@
 import sys
 import os
 import re
+import collections
 
 def get_config(file, delim):
     dict = {}
+    dict = collections.OrderedDict()
 
     try:
         with open(file, 'r', encoding='utf8', errors='ignore') as f:

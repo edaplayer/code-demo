@@ -78,7 +78,6 @@ def main():
     if len(sys.argv) == 3:
         newconfig = sys.argv[1] #新配置
         oldconfig = sys.argv[2]    #原始配置文件路径
-        #  replace_text(oldconfig, ' # CONFIG_YYY is not set\n', 'CONFIG_YYY=test\n')
         sync_config(newconfig, oldconfig)
     else:
         print("Need two arguments, please check arguments.")

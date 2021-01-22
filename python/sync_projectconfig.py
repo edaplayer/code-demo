@@ -47,6 +47,7 @@ def sync_config(src, dst):
                 regex = r'(?<=' + key + r')' + r'\s*=.*\n'
                 filedata = re.sub(regex, '=' + from_dict[key] + '\n', filedata)
                 f.seek(0, 0)
+                f.truncate()
                 f.write(filedata)
 
 def main():

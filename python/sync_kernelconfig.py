@@ -10,13 +10,6 @@ import os
 import re
 import collections
 
-def replace_text(file, text, key):
-    with open(file, 'r+') as f:
-        filedata = f.read().replace(text, key)
-        f.seek(0, 0)
-        f.truncate()
-        f.write(filedata)
-
 def get_config(file):
     keymap = {}
     keymap = collections.OrderedDict()
@@ -53,22 +46,6 @@ def get_config(file):
         exit(1)
 
     return keymap, comment, text
-
-def sync_config(src, dst):
-    k1, c1, t1 = get_config(src)
-    k2, c2, t2 = get_config(dst)
-
-    for key in k1:
-        if not key in k2 and not key in c2:
-            with open(dst, 'a') as f:
-                print(key + '=' + k1[key], file = f) # 添加键值
-        elif (key in k2 and k1[key] != k2[key]) or (key in c2) :
-            replace_text(dst, t2[key], key + '=' + k1[key] + '\n')
-
-    #  注释键值
-    for key in c1:
-        if key in k2:
-            replace_text(dst, t2[key], t1[key].strip() + '\n')
 
 def sync_config_fast(src, dst):
     k1, c1, t1 = get_config(src)

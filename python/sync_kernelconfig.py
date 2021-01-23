@@ -59,14 +59,10 @@ def sync_config(src, dst):
     k2, c2, t2 = get_config(dst)
 
     for key in k1:
-        if not key in k2:
-            if not key in c2 and not key in t2:
-                with open(dst, 'a') as f:
-                    print(key + '=' + k1[key], file = f) # 添加键值
-            else: # 取消注释
-                replace_text(dst, t2[key], t1[key].strip() + '\n')
-
-        elif k1[key] != k2[key]:
+        if not key in k2 and not key in c2:
+            with open(dst, 'a') as f:
+                print(key + '=' + k1[key], file = f) # 添加键值
+        elif (key in k2 and k1[key] != k2[key]) or (key in c2) :
             replace_text(dst, t2[key], key + '=' + k1[key] + '\n')
 
     #  注释键值

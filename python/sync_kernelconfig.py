@@ -70,11 +70,35 @@ def sync_config(src, dst):
         if key in k2:
             replace_text(dst, t2[key], t1[key].strip() + '\n')
 
+def sync_config_fast(src, dst):
+    k1, c1, t1 = get_config(src)
+    k2, c2, t2 = get_config(dst)
+
+    with open(dst, 'r') as f:
+        kernelconfig = f.read()
+        tempdata = kernelconfig
+
+    for key in k1:
+        if not key in k2 and not key in c2:
+            tempdata = tempdata + key + '=' + k1[key] +'\n'
+        elif (key in k2 and k1[key] != k2[key]) or (key in c2) :
+            tempdata = tempdata.replace(t2[key], key + '=' + k1[key] + '\n')
+
+    #  注释键值
+    for key in c1:
+        if key in k2:
+            tempdata = tempdata.replace(t2[key], t1[key].strip() + '\n')
+
+    if tempdata != kernelconfig:
+        with open(dst, 'w') as f:
+            f.write(tempdata)
+
 def main():
     if len(sys.argv) == 3:
         newconfig = sys.argv[1] #新配置
         oldconfig = sys.argv[2]    #原始配置文件路径
-        sync_config(newconfig, oldconfig)
+        #  sync_config(newconfig, oldconfig)
+        sync_config_fast(newconfig, oldconfig)
     else:
         print("Need two arguments, please check arguments.")
 

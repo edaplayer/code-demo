@@ -1,4 +1,4 @@
-#!/usr/bin/env -S gawk -F"=|is" -f
+#!/usr/bin/env -S gawk -F"=|is not" -f
 # File:   sync_kernelconfig.awk
 # Author: Edward.Tang
 # Mail:   edaplayer@163.com
@@ -50,7 +50,7 @@ END {
     for (i in c1) {
         if (dst_key[i] != "") {
             # cmd = sprintf("sed -i -r 's~\\s*(%s).*%s~# \\1 is not set~' %s", i, dst_key[i], ARGV[2]);
-            cmd = sprintf("sed -i -r 's~%s~# %s is%s~' %s", line[i], i, c1[i], ARGV[2]);
+            cmd = sprintf("sed -i -r 's~%s~# %s is not %s~' %s", line[i], i, c1[i], ARGV[2]);
             system(cmd);
         }
     }

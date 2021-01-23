@@ -30,16 +30,10 @@ function set_value(keymap, comment, k, v)
 END {
     # 修改或添加键值
     for (i in src_key) {
-        if (!(i in dst_key)) { # 目标文件中该键值不存在，则添加新键值
-            if (!(i in c2)) { # 检查旧文件的注释项中是否存在该键，不存在则追加
+        if (!(i in dst_key) && !(i in c2)) { # 目标文件中该键值不存在，且不在注释项中，则添加新键值
                 print i "=" src_key[i] >> ARGV[2];
                 close(ARGV[2]);
-            } else { # 注释项中有该键，则取消注释即可
-                # cmd = sprintf("sed -i -r 's~\\s*#\\s*(%s) is not set~\\1=%s~' %s", i, src_key[i], ARGV[2]);
-                cmd = sprintf("sed -i -r 's~%s~%s=%s~' %s", line[i], i, src_key[i], ARGV[2]);
-                system(cmd);
-            }
-        } else if (src_key[i] != dst_key[i]) { # 目标文件键值存在，且与新键值不相等，则替换为新键值
+        } else if (src_key[i] != dst_key[i]) { # 目标文件键值不相等或者在注释项中（隐含条件），则替换为新键值
             # cmd = sprintf("sed -i -r 's~\\s*(%s)\\s*=.*~\\1=%s~' %s", i, src_key[i], ARGV[2]);
             cmd = sprintf("sed -i -r 's~%s~%s=%s~' %s", line[i], i, src_key[i], ARGV[2]);
             system(cmd);

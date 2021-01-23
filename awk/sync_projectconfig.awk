@@ -5,11 +5,14 @@
 # Function: 同步文件1的配置到文件2
 {
     key = gensub(/\s/, "", "g", $1);
-    if(key == "" || (/^\s*#/) ) next; # 跳过空行和注释行
+    if (key == "" || (/^\s*#/)) next; # 跳过空行和注释行
+
+    value = gensub(/^\s*|\s*$/, "", "g", $2);
+
     if (NR == FNR) {
-        a[key] = $2;
+        a[key] = value;
     } else {
-        b[key] = $2;
+        b[key] = value;
         line[key] = $0; # line data of file2
     }
 }

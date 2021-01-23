@@ -19,7 +19,7 @@
 
 END{
     for (i in a) {
-        if (b[i] == "" && line[i] == "") {
+        if (!(i in b)) {
             print i FS a[i] >> ARGV[2]; close(ARGV[2]); # awk写入文件后必须close
         } else if (a[i] != b[i]) {
             cmd = sprintf("sed -i -r 's#\\s*(%s)\\s*=.*#\\1=%s#g' %s", i, a[i], ARGV[2])

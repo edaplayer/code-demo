@@ -30,8 +30,8 @@ function set_value(keymap, comment, k, v)
 END {
     # 修改或添加键值
     for (i in src_key) {
-        if (dst_key[i] == "") { # 目标文件中该键值不存在，则添加新键值
-            if (c2[i] == "" && line[i] == "") { # 检查旧文件的注释项中是否存在该键，不存在则追加
+        if (!(i in dst_key)) { # 目标文件中该键值不存在，则添加新键值
+            if (!(i in c2)) { # 检查旧文件的注释项中是否存在该键，不存在则追加
                 print i "=" src_key[i] >> ARGV[2];
                 close(ARGV[2]);
             } else { # 注释项中有该键，则取消注释即可

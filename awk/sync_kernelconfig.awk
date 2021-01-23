@@ -17,7 +17,7 @@ function set_value(keymap, comment, k, v)
     key = gensub(/#|\s/, "", "g", $1);
     if (key == "") next; # 跳过空行
 
-    value = $2;
+    value = gensub(/^\s*|\s*$/, "", "g", $2);
 
     if (NR==FNR) { # 记录新文件中的键值
         set_value(src_key, c1, key, value);

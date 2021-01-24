@@ -11,39 +11,35 @@ import re
 import collections
 
 def get_config(file):
-    keymap = {}
     keymap = collections.OrderedDict()
-    comment = {}
     comment = collections.OrderedDict()
-    text = {}
     text = collections.OrderedDict()
 
     try:
         with open(file, 'r', encoding='utf8', errors='ignore') as f:
-            for l in f:
-                line = l.strip()
-                if len(line) > 0:
-                    if line[0] != '#': # 键值项
-                        item = line.split('=')
-                        key = item[0].strip()
-                        if len(item) >= 2 :
-                            value = item[1].strip()
-                        else:
-                            value = ''
-                        keymap[key] = value
-                    else: # 注释项
-                        item = line.strip('#').split('is not')
-                        key = item[0].strip()
-                        if len(item) >= 2 :
-                            value = item[1].strip()
-                            if value == 'set':
-                                comment[key] = value
-
-                    text[key] = l
-
+            lines = f.readlines()
     except FileNotFoundError as e :
         print('Error: ' + file + "不存在")
         exit(1)
+
+    for line in lines:
+        data = line.strip()
+
+        if len(data) <= 0:
+            continue
+
+        if data[0] != '#': # 键值项
+            item = data.split('=')
+            key = item[0].strip()
+            if len(item) >= 2 :
+                keymap[key] = item[1].strip()
+        else: # 注释项
+            item = data.strip('#').split('is not')
+            key = item[0].strip()
+            if len(item) >= 2 :
+                comment[key] = item[1].strip()
+
+        text[key] = line
 
     return keymap, comment, text
 
@@ -57,7 +53,7 @@ def sync_config_fast(src, dst):
 
     for key in k1:
         if not key in k2 and not key in c2:
-            tempdata = tempdata + key + '=' + k1[key] +'\n'
+            tempdata += key + '=' + k1[key] +'\n'
         elif (key in k2 and k1[key] != k2[key]) or (key in c2) :
             tempdata = tempdata.replace(t2[key], key + '=' + k1[key] + '\n')
 
@@ -74,7 +70,6 @@ def main():
     if len(sys.argv) == 3:
         newconfig = sys.argv[1] #新配置
         oldconfig = sys.argv[2]    #原始配置文件路径
-        #  sync_config(newconfig, oldconfig)
         sync_config_fast(newconfig, oldconfig)
     else:
         print("Need two arguments, please check arguments.")

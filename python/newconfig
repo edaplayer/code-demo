@@ -5,3 +5,4 @@ CONFIG_YYY=test
 abc=000
 testkey=
 blankkey=    x
+# test comment, should be ignored

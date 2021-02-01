@@ -86,7 +86,7 @@ get_args()
     fi
 
     if [ -z "$IC" ]; then
-        IC=jd
+        IC=zjj
     fi
 
     GREEN "inputfile: $inputfile"
@@ -96,7 +96,7 @@ get_args()
 }
 
 # 正金晶jd9365z
-conv_jd9365z()
+conv_zjj_jd9365z()
 {
     # awk -F, ''BEGIN{FS=","; OFS=", "}
     # awk 'BEGIN{FS=","; OFS=","}
@@ -115,6 +115,20 @@ conv_jd9365z()
     }' < "${inputfile}"
 }
 
+# 合力泰jd9365d
+conv_hlt_jd9365d()
+{
+    awk -F, -v OFS=", " '
+    /SSD_Single/{
+        gsub(/SSD_Single|[();]|\s*|\/\/.*/, "", $0);
+        $1=$1
+        playloadsize_l = sprintf("0x%02X", NF%256)
+        playloadsize_h = sprintf("0x%02X", NF/256)
+
+        print "0x39, 0x01, 0x00, 0x00, 0x00", playloadsize_h, playloadsize_l, $0;
+    }' < "${inputfile}"
+}
+
 usage()
 {
 	cat <<EOF
@@ -125,12 +139,11 @@ ${script} [OPTION] <inputfile> [outputfile]
 
 Example: ${script} input.txt
         or
-        ${script} input.txt -t1 -i jd
+        ${script} input.txt -t1 -i hlt
 
 OPTIONS
     -i
-        IC Model: jd or nt, default value is jd
-        jd for JD936xx ic(Fitipower)
+        IC Model: zjj, hlt, default value is zjj
 
     -h
         See usage.
@@ -143,8 +156,11 @@ main()
     echo ==========================================================================
     echo -e "Start converting.\n"
     case $IC in
-        jd)
-        conv_jd9365z | tee "$outfile"
+        zjj)
+        conv_zjj_jd9365z | tee "$outfile"
+        ;;
+        hlt)
+        conv_hlt_jd9365d | tee "$outfile"
         ;;
         *)
         RED Error: IC $IC is not supported.

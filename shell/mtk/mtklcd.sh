@@ -28,10 +28,8 @@ error()
 
 get_args()
 {
-    HEAD=
     IC=
-    TYPE=2
-    outfile=lcd.c
+    outfile=lcd_table.c
 
     if [[ $# = 0 ]]; then
         usage
@@ -50,10 +48,6 @@ get_args()
     do
         opt=$1
         case $opt in
-            -t)
-                shift
-                TYPE=$1
-                ;;
             -i)
                 shift
                 IC=$1
@@ -77,7 +71,7 @@ get_args()
     if [ -e "$1" ]; then
         inputfile="$1"
     else
-        RED inputfile "$1" is not exist, please confirm the filename without space.
+        RED inputfile "$1" is not exist, please confirm the filename.
         usage
         exit 1
     fi
@@ -87,77 +81,66 @@ get_args()
     fi
 
     if [ -z "$IC" ]; then
-        read HEAD <"$inputfile"
-        # GREEN HEAD="$HEAD"
-        if [[ $HEAD =~ 'JD' ]]; then
-            IC=jd
-        elif [[ $HEAD =~ 'NT' ]]; then
-            IC=nt
-        else
-            RED "Error: Unrecognizable IC Model from $inputfile."
-            RED "Please specify the ic model by -i <model>."
-            usage
-            exit 1
-        fi
+        IC=jd
     fi
 
     GREEN "inputfile: $inputfile"
     GREEN "outfile:   $outfile"
     GREEN "IC:  $IC"
-    GREEN "TYPE=$TYPE"
 }
 
-conv_jd_type1()
+conv_jd_dsi()
 {
-	# while read line
-	# do
-		# reg=`echo $line | sed -n -r '
-        # s/^\s*\|\s*$//g
-        # /^SSD_Single.*/{s/^.*0x(.*),0x(.*)\);/0x\2\11500/p}'`
-		# if [ -n "$reg" ];then
-			# echo "data_array[0] = ${reg};"
-			# echo "dsi_set_cmdq(data_array, 1, 1);"
-			# echo "MDELAY(1);"
-		# else
-			# echo $line
-		# fi
-	# done < $inputfile
-    sed -r '
-        s/^\s*\|\s*$//g
-        /^SSD_Single.*/{
-			s/^.*0x(.*),0x(.*)\);/0x\2\11500/;
-            s/^(0x[a-fA-F0-9]*)/    data_array[0] = \1;/g;
-            a\    dsi_set_cmdq(data_array, 1, 1);
-		}
-        /^SSD_CMD.*/{
-			s/^.*0x(.*)\);/0x00\10500/;
-            s/^(0x[a-fA-F0-9]*)/    data_array[0] = \1;/g;
-            a\    dsi_set_cmdq(data_array, 1, 1);
-        }
-        /^Delayms.*/s/Delayms/    MDELAY/
-    ' < "${inputfile}"
-}
+    awk -F, -v OFS=", " '
+    /SSD_Single/{
+        gsub(/SSD_Single|[();]|\s*|\/\/.*/, "", $0);
+        data0 = strtonum($1)
+        data1 = strtonum($2)
 
-conv_jd_type2()
-{
-	# while read line
-	# do
-		# reg=`echo $line | sed -n -r '/^SSD_Single.*/{s/^.*0x(.*),0x(.*)\);/\{0x\2, 1, \1\}/p}'`
-		# if [ -n "$reg" ];then
-			# echo $reg
-		# fi
-	# done < $inputfile
-    sed -n -r '
-    s/^\s*\|\s*$//g
-    /^SSD_Single.*/{
-        s/^.*(0x.*),(0x.*)\);/    \{\1, 1, \{\2\}\ },/p
+        printf("    data_array[0] = 0x%02X%02X1500;\n", data1, data0)
+        printf("    dsi_set_cmdq(data_array, 1, 1);\n")
+        next
     }
-    /^SSD_CMD.*/{
-        s/^.*(0x.*)\);/    \{\1, 0, \{\}\ },/p
-    }' < "${inputfile}"
+
+    /SSD_CMD/{
+        gsub(/SSD_CMD|[();]|\s*|\/\/.*/, "", $0);
+        cmd = strtonum($1)
+        printf("    data_array[0] = 0x00%2X0500;\n", cmd)
+        printf("    dsi_set_cmdq(data_array, 1, 1);\n")
+        next
+    }
+
+    /Delayms/{
+        gsub(/Delayms/, "    MDELAY", $0);
+    }
+    1 ' < "${inputfile}"
 }
 
-conv_nt_type1()
+conv_jd_table()
+{
+    awk -F, '
+    /SSD_Single/{
+        match($0, "(//.*)", comment)
+
+        gsub(/SSD_Single|[();]|\s*|\/\/.*/, "", $0);
+
+        data0 = strtonum($1)
+        data1 = strtonum($2)
+        printf("    {0x%02X, 1, {0x%02X} },%s\n", data0, data1, comment[1])
+        next
+    }
+
+    /SSD_CMD/{
+        match($0, "(//.*)", comment)
+        gsub(/SSD_CMD|[();]|\s*|\/\/.*/, "", $0);
+        data0 = strtonum($1)
+        printf("    {0x%02X, 0, {} },%s\n", data0, comment[1])
+        next
+    }
+    # 1 ' < "${inputfile}"
+}
+
+conv_nt_dsi()
 {
     awk -F, '
     $1 ~ /REGW|regw/{
@@ -194,7 +177,7 @@ conv_nt_type1()
     }' < "${inputfile}"
 }
 
-conv_nt_type2()
+conv_nt_table()
 {
     awk -F, '
     $1 ~ /REGW|regw/{
@@ -208,7 +191,7 @@ conv_nt_type2()
     }' < "${inputfile}"
 }
 
-conv_hx_type1()
+conv_hx_dsi()
 {
     awk '
     {
@@ -220,7 +203,7 @@ conv_hx_type1()
     }' < "${inputfile}"
 }
 
-conv_ota_type2()
+conv_ota_table()
 {
     sed -n -r '
     s/^\s*\|\s*$//g
@@ -229,7 +212,7 @@ conv_ota_type2()
     }' < "${inputfile}"
 }
 
-conv_ili_type2()
+conv_ili_table()
 {
     awk -F, '
     $1 ~ /REGISTER/{
@@ -245,7 +228,7 @@ conv_ili_type2()
     }' < "${inputfile}"
 }
 
-conv_boe_type2()
+conv_boe_table()
 {
     awk -F= '
     $0 ~ /=/{
@@ -254,121 +237,122 @@ conv_boe_type2()
     }' < "${inputfile}"
 }
 
+conv_table_to_dsi()
+{
+    awk -F, -v OFS="," '
+    /{.*}/{
+        gsub(/{|}|[[:space:]]|\/\/.*/,"");
+
+        len = $2 + 1
+        $2=""
+        sub(",,", ",", $0);
+
+        if(len <= 2)
+        {
+            cmd1 = strtonum($1); cmd2 = strtonum($2);
+            printf("    data_array[0] = 0x%02X%02X%d500;\n", cmd2, cmd1, len-1)
+            printf("    dsi_set_cmdq(data_array, 1, 1);\n")
+        }
+        else
+        {
+            lines = int(len/4) + 1;
+            if(len%4 == 0)
+            {
+                # print "len is a multiple of 4"
+                lines--;
+            }
+            # print "lines=" lines
+            printf("    data_array[0] = 0x%04x3902;\n", len)
+            for(row = 0; row < lines; row++)
+            {
+                i = row * 4; # print "i=" i;
+                cmd1 = strtonum($(i + 1)); cmd2 = strtonum($(i + 2));
+                cmd3 = strtonum($(i + 3)); cmd4 = strtonum($(i + 4));
+                printf("    data_array[%d] = 0x%02X%02X%02X%02X;\n",
+                    row+1, cmd4, cmd3, cmd2, cmd1)
+            }
+            printf("    dsi_set_cmdq(data_array, %d, 1);\n", lines + 1)
+        }
+        printf "    MDELAY(1);\n\n"
+    }' < "${1}"
+}
 
 process_jd()
 {
-    case $TYPE in
-        1)
-        conv_jd_type1
-        ;;
-        2)
-        conv_jd_type2
-        ;;
-        *)
-        RED IC $IC type $TYPE is not supported.
-        exit 1
-        ;;
-    esac
+    conv_jd_table | tee lcd_table.c
+    conv_jd_dsi | tee lcd_dsi.c
+    cp lcd_dsi.c lcd_dsi_jd.c
 }
 
 process_nt()
 {
-    case $TYPE in
-        1)
-        conv_nt_type1
-        ;;
-        2)
-        conv_nt_type2
-        ;;
-        *)
-        RED IC $IC type $TYPE is not supported.
-        exit 1
-        ;;
-    esac
+    conv_nt_dsi | tee lcd_dsi.c
+    conv_nt_table | tee lcd_table.c
+    cp lcd_dsi.c lcd_dsi_nt.c
 }
 
 process_hx()
 {
-    case $TYPE in
-        1)
-        conv_hx_type1
-        ;;
-        *)
-        RED IC $IC type $TYPE is not supported.
-        exit 1
-        ;;
-    esac
+    conv_hx_dsi | tee lcd_dsi.c
 }
 
 process_ota()
 {
-    case $TYPE in
-        2)
-        conv_ota_type2
-        ;;
-        *)
-        RED IC $IC type $TYPE is not supported.
-        exit 1
-        ;;
-    esac
+    conv_ota_table | tee lcd_table.c
 }
 
 process_ili()
 {
-    case $TYPE in
-        2)
-        conv_ili_type2
-        ;;
-        *)
-        RED IC $IC type $TYPE is not supported.
-        exit 1
-        ;;
-    esac
+    conv_ili_table | tee lcd_table.c
 }
 
 process_boe()
 {
-    case $TYPE in
-        2)
-        conv_boe_type2
-        ;;
-        *)
-        RED IC $IC type $TYPE is not supported.
-        exit 1
-        ;;
-    esac
+    conv_boe_table | tee lcd_table.c
 }
 
 usage()
 {
 	cat <<EOF
     Convert lcd init code of vendor to mtk lcm code. Default output file is lcd.c
+    Output file is lcd_dsi.c and lcd_table.c
 
 SYNOPSIS
 ${script} [OPTION] <inputfile> [outputfile]
 
 Example: ${script} input.txt
         or
-        ${script} input.txt -t1 -i jd
+        ${script} input.txt -i jd
+        or
+        ${script} input.txt -i nt
 
 OPTIONS
-    -t
-        type: 1 or 2, default value is 2
-        1 for dsi_set_cmdq function
-        2 for push_table function
-
     -i
-        IC Model: jd or nt, default value is jd
-        jd for JD936xx ic(Fitipower)
-        nt for NT355xx ic(novatek)
-        hx for HX82xx ic(himax)
-        ota for ota7290b ic
-        ili for ili9881 ic
-        boe for nt51021(boe) ic
+        IC Model: jd, nt, default value is jd
+        jd for JD936x ic(Fitipower)
+        nt for NT355xx ic(Novatek)
+        hx for HX82xx ic(Himax)
+        ota for ota7290b ic(Focaltech)
+        ili for ili9881 ic(ILITEK)
+        boe for nt51021(Boe) ic
 
     -h
         See usage.
 EOF
+}
+
+work()
+{
+    case $IC in
+        jd) process_jd;;
+        nt) process_nt;;
+        hx) process_hx;;
+        ota) process_ota;;
+        ili) process_ili;;
+        boe) process_boe;;
+        *) error Error: IC $IC is not supported.;;
+    esac
+    conv_table_to_dsi lcd_table.c | tee lcd_dsi.c
 }
 
 main()
@@ -376,37 +360,13 @@ main()
     get_args $@
     echo ==========================================================================
     echo -e "Start converting.\n"
-    case $IC in
-        jd)
-        process_jd | tee "$outfile"
-        ;;
-        nt)
-        process_nt | tee "$outfile"
-        ;;
-        hx)
-        process_hx | tee "$outfile"
-        ;;
-        ota)
-        process_ota | tee "$outfile"
-        ;;
-        ili)
-        process_ili | tee "$outfile"
-        ;;
-        boe)
-        process_boe | tee "$outfile"
-        ;;
-        *)
-        RED Error: IC $IC is not supported.
-        usage
-        ;;
-    esac
+
+    work
+
     echo
     echo ==========================================================================
-    GREEN HEAD=$HEAD
     GREEN "inputfile: $inputfile"
-    GREEN "outfile:   $outfile"
-    GREEN "IC:  $IC"
-    GREEN "TYPE=$TYPE"
+    GREEN "outfile:   $outfile lcd_dsi.c"
     GREEN Convert completed successfully.
     echo ==========================================================================
 }

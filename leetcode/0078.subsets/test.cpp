@@ -27,35 +27,60 @@
 
 using namespace std;
 
+// 常规法，时间复杂度(2^n), 空间复杂度O(n)
 vector<vector<int>> subsets(vector<int>& nums) {
-    vector<vector<int>> ans={{}};
-    for (int i = 0; i < nums.size(); i++) {
-        int len = ans.size();
-        for (int j = 0; j < len; j++) {
-            vector<int> temp = ans[j];
-            temp.push_back(nums[i]);
-            ans.push_back(temp);
-        }
-    };
-    return ans;
+	vector<vector<int>> ans={{}};
+	for (int i = 0; i < nums.size(); i++) {
+		int len = ans.size();
+		for (int j = 0; j < len; j++) {
+			vector<int> temp = ans[j];
+			temp.push_back(nums[i]);
+			ans.push_back(temp);
+		}
+	};
+	return ans;
 }
+
+// 位运算
+class Solution {
+public:
+	static vector<vector<int>> subsets(vector<int>& nums) {
+		vector<vector<int>> ans;
+		vector<int> t;
+		int n = nums.size();
+		for (int mask = 0; mask < (1 << n); ++mask) {
+			t.clear();
+			printf("mask = %d\n", mask);
+			for (int i = 0; i < n; ++i) {
+				if (mask & (1 << i)) {
+					printf("i = %d\n", i);
+					t.push_back(nums[i]);
+				}
+			}
+			ans.push_back(t);
+			cout << endl;
+		}
+		return ans;
+	}
+};
 
 int main(int argc, char *argv[])
 {
-    int a1[] = {1, 2, 3};
-    vector<int> nums = {1, 2, 3};
+	int a1[] = {1, 2, 3};
+	vector<int> nums = {1, 2, 3};
 
-    vector<vector<int>> ans = subsets(nums);
+	// vector<vector<int>> ans = subsets(nums);
+	vector<vector<int>> ans = Solution::subsets(nums);
 
-    for (auto &i : ans)
-    {
-        for (auto &j : i)
-        {
-            cout << j << " ";
-        }
-        cout << endl;
-    }
+	for (auto &i : ans)
+	{
+		for (auto &j : i)
+		{
+			cout << j << " ";
+		}
+		cout << endl;
+	}
 
-    return 0;
+	return 0;
 }
 

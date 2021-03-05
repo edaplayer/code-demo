@@ -29,14 +29,14 @@ def get_config(file):
             continue
 
         if data[0] != '#': # 键值项
-            item = data.split('=')
-            key = item[0].strip()
-            if len(item) >= 2 :
+            if '=' in data:
+                item = data.split('=')
+                key = item[0].strip()
                 keymap[key] = item[1].strip()
         else: # 注释项
-            item = data.strip('#').split('is not')
-            key = item[0].strip()
-            if len(item) >= 2 :
+            if 'is not' in data:
+                item = data.strip('#').split('is not')
+                key = item[0].strip()
                 comment[key] = item[1].strip()
 
         text[key] = line

@@ -30,6 +30,7 @@ struct ListNode {
 	ListNode(int x, ListNode *next) : val(x), next(next) {};
 };
 
+// Pointer to Pointer + new
 ListNode* mergeTwoLists1(ListNode* l1, ListNode* l2) {
 	ListNode* phead = nullptr;
 	ListNode** pp = &phead;
@@ -51,6 +52,7 @@ ListNode* mergeTwoLists1(ListNode* l1, ListNode* l2) {
 	return phead;
 }
 
+// Pointer to Pointer
 ListNode* mergeTwoLists2(ListNode* l1, ListNode* l2) {
 	ListNode* phead = nullptr;
 	ListNode** pp = &phead;
@@ -71,6 +73,7 @@ ListNode* mergeTwoLists2(ListNode* l1, ListNode* l2) {
 	return phead;
 }
 
+// Recursion
 ListNode* mergeTwoLists3(ListNode* l1, ListNode* l2) {
 	if(l1 == nullptr)
 		return l2;
@@ -88,7 +91,6 @@ ListNode* mergeTwoLists3(ListNode* l1, ListNode* l2) {
 		return l2;
 	}
 }
-
 
 ListNode* createListNode(int array[], int size)
 {
@@ -125,6 +127,7 @@ int main(int argc, char *argv[])
 	ListNode * p2 = createListNode(a2, ARRAY_SIZE(a2));
 	print(p1);
 	print(p2);
+
 	ListNode * result1 = mergeTwoLists1(p1, p2);
 	print(result1);
 
@@ -133,8 +136,7 @@ int main(int argc, char *argv[])
 
 	p1 = createListNode(a1, ARRAY_SIZE(a1));
 	p2 = createListNode(a2, ARRAY_SIZE(a2));
-
-	ListNode * result3 = mergeTwoLists3(p1, p2);
+	ListNode * result3 = mergeTwoLists3(p1, p2); //注意：mergeTwoLists3也会破坏原始链表p1 p2
 	print(result3);
 
 	return 0;

@@ -675,6 +675,8 @@ int CMP( const void *a, const void *b )
 	return strcmp((char *)a, (char *)b);
 	//strcmp(str1,str2)，str1=str2，返回零；str1<str2，返回负数；str1>str2，返回正数。
 }
+
+//  火车出站点
 void dfs()
 {
 	if( index1 == n )  //出站任务完成
@@ -708,6 +710,7 @@ void dfs()
 
 int main()
 {
+	//train
 	while( scanf("%d",&n ) != EOF){
 		index1 = 0;
 		index2 = -1;

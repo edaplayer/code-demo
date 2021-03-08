@@ -5,4 +5,12 @@
 # mail:   @163.com
 # Created Time: Mon 02 Nov 2020 08:19:32 AM UTC
 #########################################################################
-make && cat data.txt | ./main
+make && ./main <<EOF
+6
+2
+5
+1
+5
+4
+5
+EOF

@@ -9,50 +9,45 @@ import sys
 from xml.dom import minidom
 import xml.etree.ElementTree as ET
 
-def print_minidom(p):
+def walk_minidom(p):
     print(p)
     if not p.hasChildNodes():
         return
     else:
         for x in p.childNodes:
-            print_minidom(x)
+            walk_minidom(x)
 
-def print_etree(root):
-    if root.tag:
-        print('tag: %r' % root.tag)
+def walk_etree(root):
+    print('tag: %r' % root.tag)
+
     if root.attrib:
         print('attrib: %r' % root.attrib)
+
     if root.text:
         print('text: %r' % root.text)
 
     for child in root:
-        print_etree(child)
+        walk_etree(child)
+
+def test_walk_tree(tree):
+    walk_etree(tree.getroot())
+
+def test_make_tree_fromstring():
+    xml_data = "<root><book>西游记</book></root>"
+    newroot = ET.fromstring(xml_data)
+    newtree = ET.ElementTree(newroot)# 只有elementtree类才有indent方法，所以需要先转换成tree
+    ET.indent(newtree) 
+    ET.dump(newtree)
+    newtree.write('xiyouji.xml')
 
 if __name__=="__main__":
-    #  xml_minidom = minidom.parse("dom_write.xml")
-    #  print(type(xml_minidom.childNodes[0]))
-    #  print_minidom(xml_minidom.childNodes[0])
+    if len(sys.argv) == 2:
+        xmlfile = sys.argv[1]
+    else:
+        print('Nedd a argument.')
+        exit(1)
 
-    tree = ET.parse("country_data.xml")
-    root = tree.getroot()
-    #  print_etree(tree.getroot())
-    for rank in root.iter('rank'):
-        new_rank = int(rank.text) + 1
-        rank.text = str(new_rank)
-        rank.set('updated', 'yes')
-    tree.write('output.xml')
+    tree = ET.parse(xmlfile)
+    test_walk_tree(tree)
 
-    #  xml_data = "<root><book>hanhan</book></root>"
-    #  print(ET.canonicalize(xml_data))
-
-    #  newroot = ET.fromstring(xml_data)
-    #  newroot.write('et.xml')
-    test_tree = ET.parse("et.xml")
-    ET.dump(test_tree)
-    ET.indent(test_tree)
-    #  print(test_tree)
-    test_tree.write('indent.xml')
-    ET.dump(test_tree)
-    #  print(type(newroot))
-
-
+    test_make_tree_fromstring()

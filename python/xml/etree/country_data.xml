@@ -20,5 +20,6 @@
         <neighbor name="Costa Rica" direction="W"/>
         <neighbor name="Colombia" direction="E"/>
     </country>
+    <neighbor name="yyyyyyyyyyyyyyyy" direction="W"/>
 </data>
 

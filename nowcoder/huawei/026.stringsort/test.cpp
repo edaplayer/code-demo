@@ -23,8 +23,9 @@ int main()
 
     while(getline(cin,s))
     {
-        string ans = s;
-        vector<vector<char>> V(26);
+		string ans = s;
+		// string ans(s.size(), '1');
+		vector<vector<char>> V(26);
 		const char flag = 'a';
 
         for(int i = 0 ; i < s.length() ; i++)
@@ -44,7 +45,8 @@ int main()
 
             // if(s[i]>='A'&&s[i]<='Z') //如果是大写字母，放进桶
             // {
-                // ans[i]='a';//只是用来标记一下，标记下标i处有值，用什么字母无所谓，但一定不能用非字母! 如果想用非字母，ans必须全部初始化为非标记
+                // ans[i]='a';//只是用来标记一下，标记下标i处有值，用什么字母无所谓，但一定不能用非字母!
+							//如果想用非字母，ans必须全部初始化为非标记，且最后要注意填入s的非字母；
                 // V[s[i]-'A'].push_back(s[i]); //进桶
             // }
             // else if(s[i]>='a'&&s[i]<='z') //小写字母，同样要入桶
@@ -76,6 +78,9 @@ int main()
 				ans[k]= alpha[j];
 				j++; //取出字母后alpha下标要移动
 			}
+			// else {
+				// ans[k] = s[k];
+			// }
 		}
         cout << ans << endl;
     }

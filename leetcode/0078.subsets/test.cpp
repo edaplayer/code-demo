@@ -27,7 +27,7 @@
 
 using namespace std;
 
-// 常规法，时间复杂度(2^n), 空间复杂度O(n)
+// 常规法，时间复杂度(n^2), 空间复杂度O(n)
 vector<vector<int>> subsets(vector<int>& nums) {
 	vector<vector<int>> ans={{}};
 	for (int i = 0; i < nums.size(); i++) {
@@ -40,6 +40,26 @@ vector<vector<int>> subsets(vector<int>& nums) {
 	};
 	return ans;
 }
+
+// dfs
+class Dfs {
+public:
+	vector<int> temp;
+	vector<vector<int>> ans;
+
+	void subsets_dfs(int cur, vector<int>& nums) {
+		if (cur == nums.size()) {
+			ans.push_back(temp);
+			return;
+		}
+
+		temp.push_back(nums[cur]);
+		subsets_dfs(cur+1, nums);
+
+		temp.pop_back();
+		subsets_dfs(cur+1, nums);
+	}
+};
 
 // 位运算
 class Solution {
@@ -70,7 +90,11 @@ int main(int argc, char *argv[])
 	vector<int> nums = {1, 2, 3};
 
 	// vector<vector<int>> ans = subsets(nums);
-	vector<vector<int>> ans = Solution::subsets(nums);
+	// vector<vector<int>> ans = Solution::subsets(nums);
+
+	Dfs s;
+	s.subsets_dfs(0, nums);
+	vector<vector<int>> ans = s.ans;
 
 	for (auto &i : ans)
 	{

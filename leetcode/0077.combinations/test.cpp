@@ -93,13 +93,54 @@ vector<vector<int>> combine1(int n, int k) {
 	return ans;
 }
 
+class Solution {
+public:
+	vector<vector<int>> ans;
+	vector<int> temp;
+	int n, k;
+	Solution(){};
+	Solution(int n, int k):n(n), k(k){};
+
+	void dfs(int cur) {
+		if (temp.size() + (n-cur+1) < k) {
+			return;
+		}
+
+		if (temp.size() == k) {
+			ans.push_back(temp);
+			return;
+		}
+
+		// if (cur == n + 1) {
+			// return;
+		// }
+
+		temp.push_back(cur);
+		dfs(cur + 1);
+		temp.pop_back();
+		dfs(cur + 1);
+	}
+
+	vector<vector<int>> combine(int n, int k) {
+		this->n = n;
+		this->k = k;
+		dfs(1);
+		return ans;
+	};
+
+};
+
 int main(int argc, char *argv[])
 {
 	int a1[] = {1, 2, 3};
 	vector<int> nums = {1, 2, 3};
+	vector<vector<int>> ans;
 
 	// vector<vector<int>> ans = combine(4, 2);
-	vector<vector<int>> ans = combine1(4, 2);
+	// vector<vector<int>> ans = combine1(4, 2);
+	// Solution s(4, 2);
+	Solution s;
+	ans = s.combine(4, 2);
 
 	for (auto &i : ans)
 	{

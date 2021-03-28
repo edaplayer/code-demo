@@ -41,9 +41,9 @@ int lengthOfLongestSubstring(string s) {
 	for (i=0;i<s.length();i++) book[s[i]]=-1; //必须用for初始化数组
 	for (i=0; i < s.length(); i++)
 	{
-		// pre = max(pre, book[s[i]]);
-		// Max = max(Max, i-pre);
-		// book[s[i]] = i;
+		// pre = max(pre, book[s[i]]); //重新确定左边界
+		// Max = max(Max, i-pre); //更新最大长度
+		// book[s[i]] = i; //更新字符坐标
 
 		if (book[s[i]] > pre)
 			pre = book [ s[i] ];
@@ -73,8 +73,9 @@ int main(int argc, char *argv[])
 {
 	string s;
 	while(cin >> s) {
-		// cout << lengthOfLongestSubstring(s) << endl;
-		cout << getlen(s) << endl;
+		cout << lengthOfLongestSubstring(s) << endl;
+		// cout << getSubStrlen(s) << endl;
+		// cout << getlen(s) << endl;
 	}
 
 	return 0;

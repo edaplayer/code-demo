@@ -6,13 +6,53 @@
  ************************************************************************/
 
 #include <iostream>
-#include <stack>
 #include <vector>
 #include <unordered_map>
 
 using namespace std;
 
-class Solution {
+// 穷举
+class Solution1 {
+public:
+    static vector<int> twoSum(vector<int>& nums, int target) {
+		vector<int> res(2);
+		int n = nums.size();
+		int i, j;
+		for (i = 0; i < n - 1; ++i) {
+			int diff = target - nums[i];
+			cout << "diff = " << diff << endl;
+			res[0] = i;
+			for (j = i + 1; j < n; j++) {
+				cout << "diff = " << diff << endl;
+				cout << "nums = " << nums[j] << endl;
+				if (nums[j] == diff)
+				{
+					res[1] = j;
+					return res;
+				}
+			}
+		}
+		return res;
+    }
+};
+
+class Solution2 {
+public:
+    static vector<int> twoSum(vector<int>& nums, int target) {
+		unordered_map<int, int> m;
+		for (int i = 0; i < nums.size(); ++i) {
+			if (m.find(target - nums[i]) != m.end()) { //不等于end，说明结果已出，直接返回坐标
+				return {m[target -nums[i]], i}; //找到差值，直接返回，记忆方法：return和if条件一致
+			} else {
+				m[nums[i]] = i; //没找到，以当前数值为key记录当前坐标，key = nums[i]，value = i
+			}
+		}
+		return {};
+    }
+};
+
+// 这个不好记，不推荐
+class Solution3 {
 public:
 	/**
 	 *
@@ -23,7 +63,6 @@ public:
 	static vector<int> twoSum(vector<int>& numbers, int target) {
 		// write code here
 		unordered_map<int, int> map;
-		vector<int> result;
 
 		for (int i = 0; i < numbers.size(); i++)
 		{
@@ -37,12 +76,10 @@ public:
 				//如果numbers刚好等于某差值，说明该数为所求，此时记录numbers的下标i + 1和差值下标即可退出;
 				// cout << "map[ numbers[i]]  + 1= " << map[numbers[i]] + 1 << endl;
 				// cout << "i + 1 = " << i + 1 << endl;
-				result.push_back(map[ numbers[i] ] + 1);
-				result.push_back(i + 1);
-				break;
+				return {map[numbers[i]], i};
 			}
 		}
-		return result;
+		return {};
 	}
 };
 
@@ -50,7 +87,9 @@ int main()
 {
 	vector<int> num = {3, 2, 4};
 	int target = 6;
-	vector<int> res = Solution::twoSum(num, target);
+	// vector<int> res = Solution1::twoSum(num, target);
+	// vector<int> res = Solution2::twoSum(num, target);
+	vector<int> res = Solution3::twoSum(num, target);
 
 	for (auto &i : res)
 	{

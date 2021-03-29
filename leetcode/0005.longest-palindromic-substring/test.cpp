@@ -18,8 +18,10 @@ using namespace std;
 char * longestPalindrome(const char * str)
 {
 	int len = strlen(str);
-	char * s = (char *)malloc(sizeof(char) * len * 2 + 3);
-	int * p = (int *)malloc(sizeof(int) * len * 2 + 3);
+	// char * s = (char *)malloc(sizeof(char) * len * 2 + 3);
+	// int * p = (int *)malloc(sizeof(int) * len * 2 + 3);
+	static char s[MAXLEN];
+	static int p[MAXLEN];
 	// p要手动初始化为0
 	memset(p, 0, sizeof(int) * len * 2 + 3);
 	int start = 0;
@@ -55,7 +57,7 @@ char * longestPalindrome(const char * str)
 
 		// 继续扩展
 		// 扩大回文半径，求p[i]的最终值
-		// 左侧回文半径p[i]的值一定不能超过边界，即p[i] <= i
+		// 左侧回文半径(p[i]的值)一定不能超过边界，即p[i] <= i；如果令s[0] = '^'，和结束字符'\0'不匹配，结束循环
 		// 注意++p[i]就是递增s的坐标
 		while (s[i - p[i]] == s[i + p[i]]) {
 			++p[i];
@@ -88,7 +90,7 @@ char * longestPalindrome(const char * str)
 
 	printf("%d\n", maxlen);
 	printf("%s\n", ans);
-	return s;
+	return ans;
 }
 
 int main(int argc, char *argv[])

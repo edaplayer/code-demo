@@ -14,64 +14,66 @@ struct TreeNode {
 };
 
 class Solution {
+private:
+	vector<int> out1;
+	vector<int> out2;
+	vector<int> out3;
 public:
 	/**
 	 *
 	 * @param root TreeNode类 the root of binary tree
 	 * @return int整型vector<vector<>>
 	 */
-	void PreOrder(TreeNode* root, vector<int> &out) {
+	void PreOrder(TreeNode* root) {
 		if(!root)
 			return;
-		out.push_back(root->val);
+		out1.push_back(root->val);
 
 		if (root->left) {
-			PreOrder(root->left, out);
+			PreOrder(root->left);
 		}
 
 		if (root->right) {
-			PreOrder(root->right, out);
+			PreOrder(root->right);
 		}
 	};
 
-	void InOrder(TreeNode* root, vector<int> &out) {
+	void InOrder(TreeNode* root) {
 		if(!root)
 			return;
-		out.push_back(root->val);
 
 		if (root->left) {
-			InOrder(root->left, out);
+			InOrder(root->left);
 		}
 
+		out2.push_back(root->val);
+
 		if (root->right) {
-			InOrder(root->right, out);
+			InOrder(root->right);
 		}
 	};
 
-	void PostOrder(TreeNode* root, vector<int> &out) {
+	void PostOrder(TreeNode* root) {
 		if(!root)
 			return;
 
 		if (root->left) {
-			InOrder(root->left, out);
+			PostOrder(root->left);
 		}
 
 		if (root->right) {
-			InOrder(root->right, out);
+			PostOrder(root->right);
 		}
-		out.push_back(root->val);
+		out3.push_back(root->val);
 	};
 
 	vector<vector<int> > threeOrders(TreeNode* root) {
 		// write code here
 		vector<vector<int>> res;
-		vector<int> out1;
-		vector<int> out2;
-		vector<int> out3;
 
-		PreOrder(root, out1);
-		InOrder(root, out2);
-		PostOrder(root, out3);
+		PreOrder(root);
+		InOrder(root);
+		PostOrder(root);
 
 		res.push_back(out1);
 		res.push_back(out2);

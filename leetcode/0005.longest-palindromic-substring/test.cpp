@@ -44,7 +44,8 @@ char * longestPalindrome(const char * str)
 	// 令s[0]='^', 由于s[2*len+2]='\0', 不等于s[0], 可以防止在while时p[i]越界
 	s[0] = '^';
 
-	int mx = p[id] + id;
+	// int mx = p[id] + id;
+	int mx = 0; //如果p[0]未初始化，则mx必须初始化为0或1
 	for (int i = 2; i < 2 * len + 1; ++i) {
 		// 假设s[id]~s[p[id]]区间是对称的，因为id附近（大回文串）是对称的，如果j附近对称，那么i附近也必然对称
 		// 所以可以用p[i]跳过一部分字串的重复检测，直接跳到i+p[i]继续检测

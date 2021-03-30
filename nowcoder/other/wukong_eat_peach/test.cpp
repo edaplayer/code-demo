@@ -83,8 +83,50 @@ int test2()
 	return 0;
 }
 
+bool is_possible(vector<int>& piles , int k, int h) {
+	long long int t = 0;
+	for (auto p : piles) {
+		t += (p-1)/k + 1;
+	}
+	return t <= h;
+}
+
+int minEatingSpeed() {
+	auto n = 0;
+	vector<int> piles;
+
+	while (cin >> n) {
+		piles.push_back(n);
+	}
+
+	int h = piles.back();
+
+	piles.pop_back();
+
+	sort(piles.begin(), piles.end());
+	//int kmax = pow(10, 9);
+	int kmax = piles.back();
+
+	int i = 0;
+	long long int t = 0;
+	int l = 1;
+	int r = kmax;
+	int m;
+	while (l <= r)
+	{
+		m = (l + r) /2;
+		if(!is_possible(piles, m, h)) {
+			l = m + 1;
+		} else {
+			r = m - 1;
+		}
+	}
+	return l;
+}
+
 int main()
 {
 	// test1();
-	test2();
+	// test2();
+	cout << minEatingSpeed() << endl;
 }

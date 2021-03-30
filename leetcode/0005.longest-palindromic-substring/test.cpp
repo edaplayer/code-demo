@@ -7,9 +7,9 @@
 #include <algorithm>
 #include <cstring>
 #include <cstdio>
+#include <cstdlib>
 
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof((a)[0]))
-#define MAX(a,b) (((a)>(b))?(a):(b))
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAXLEN  (5000 + 10)
 
@@ -20,7 +20,7 @@ char * longestPalindrome(const char * str)
 	int len = strlen(str);
 	// char * s = (char *)malloc(sizeof(char) * len * 2 + 3);
 	// int * p = (int *)malloc(sizeof(int) * len * 2 + 3);
-	static char s[MAXLEN];
+	static char s[MAXLEN] = {'^'};
 	static int p[MAXLEN];
 	// p要手动初始化为0
 	memset(p, 0, sizeof(int) * len * 2 + 3);
@@ -42,7 +42,7 @@ char * longestPalindrome(const char * str)
 	// 插入了len+1个'#',最终的s长度是1~len+len+1即2*len+1,首尾s[0]和s[2*len+2]要插入不同的字符
 	// 因为s [2*len + 2] = s[len] = '\0'， 所以末尾字符一定是'\0'
 	// 令s[0]='^', 由于s[2*len+2]='\0', 不等于s[0], 可以防止在while时p[i]越界
-	s[0] = '^';
+	// s[0] = '^';
 
 	// int mx = p[id] + id;
 	int mx = 0; //如果p[0]未初始化，则mx必须初始化为0或1
@@ -85,7 +85,8 @@ char * longestPalindrome(const char * str)
 	// }
 	// std::cout << std::endl;
 
-	char * ans = (char *) malloc(sizeof(char)*maxlen+1);
+	// char * ans = (char *) malloc(sizeof(char)*maxlen+1);
+	static char ans[MAXLEN];
 	strncpy(ans, &str[start], maxlen);
 	ans[maxlen] = '\0';
 

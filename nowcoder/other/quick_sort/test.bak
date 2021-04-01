@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-#include <cstring>
 #include <algorithm>
 
 using namespace std;
@@ -52,45 +51,18 @@ void quick_sort_mid(int s[], int l, int r)
 			while(s[j] > m) j--; //从j开始向前搜索(j--)，找到第一个小于m的值，准备放到左边
 			cout << "i=" << i <<endl;
 			cout << "j=" << j <<endl;
-			if (i < j) {
-				cout << "swap i=" << i <<endl;
-				cout << "swap j=" << j <<endl;
-				swap(s[i], s[j]);//交换a[i]和a[j]的值
-				show(s, 10);
-			}
-		}
-
-		quick_sort_mid(s, l, i - 1); // 递归调用
-		quick_sort_mid(s, i + 1, r);
-	}
-}
-
-void quick_sort_mid_ok(int s[], int l, int r)
-{
-    if (l < r)
-    {
-		cout << "quick_sort_mid_ok start" <<endl;
-		int m = s[(l + r)/2]; //以中间元素作为关键数据
-		cout << "m=" << m <<endl;
-		int i = l,j = r;
-		while(i < j){ //直到i>j
-			while(s[i] < m) i++; //从i开始向前搜索(i++)，找到第一个大于m的值//准备放到右边
-			while(s[j] > m) j--; //从j开始向前搜索(j--)，找到第一个小于m的值，准备放到左边
-			cout << "i=" << i <<endl;
-			cout << "j=" << j <<endl;
 			if (i <= j) {
 				cout << "swap i=" << i <<endl;
 				cout << "swap j=" << j <<endl;
 				swap(s[i], s[j]);//交换a[i]和a[j]的值
 				show(s, 10);
-				i++;//继续检查下一组元素
+				i++;
 				j--;
 			}
 		}
-		cout << "quick_sort_mid_ok end" << endl;
 
-		quick_sort_mid_ok(s, l, j); // 递归调用
-		quick_sort_mid_ok(s, i, r);
+		quick_sort(s, l, j); // 递归调用
+		quick_sort(s, i, r);
 	}
 }
 
@@ -105,14 +77,25 @@ int main()
 			cin >> a[i];
         }
 
-		int b[n];
-		memcpy(b,a,sizeof(a));
-
-		// quick_sort_mid(a, 0, n-1);
 		show(a, 10);
-		cout << "b:" << endl;
-		quick_sort_mid_ok(b, 0, n-1);
-		show(b, 10);
+		quick_sort_mid(a, 0, n-1);
+		// int *pos = find(a, a + n, 373);
+		// cout << "pos:"<< pos - a<< " ";
+		// std::cout <<  std::endl;
+		for (auto &num: a) {
+			cout << num << " ";
+		}
 		cout << endl;
     }
 }
+
+// int main()
+// {
+	// int a[] = {72, 6, 57, 88, 60, 42, 83, 73, 48, 85};
+	// quick_sort(a, 0, 9);
+	// for (auto &i: a)
+	// {
+		// cout << i << " ";
+	// }
+	// cout << endl;
+// }

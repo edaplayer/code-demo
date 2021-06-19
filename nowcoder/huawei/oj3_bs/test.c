@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <arpa/inet.h>
 
 #define CMD_LEN 10
 #define CMD_NUM 10
@@ -163,31 +162,33 @@ int main(int argc, char *argv[])
 
 	if (scanf("%d %d", &rows, &cols) != 2) {
 		return -1;
-	};
+	}
 
 	if (scanf("%d", &bscnt) != 1) {
 		return -1;
-	};
-
-	for (int i = 0; i < bscnt; i++) {
-		scanf("%d %d", &bs[i].row, &bs[i].col);
 	}
 
+	for (int i = 0; i < bscnt; i++) {
+		if (scanf("%d %d", &bs[i].row, &bs[i].col) != 2) {
+			return -1;
+		}
+	}
+
+	int cmdCnt;
+	if (scanf("%d", &cmdCnt) != 1) {
+		return -1;
+	}
+
+	for (int i = 0; i < cmdCnt; i++) {
+		if (scanf("%s %d %d", commands[i].cmd, &commands[i].coord.row, &commands[i].coord.col) != 3) {
+			return -1;
+		}
+	}
 	rows++;
 	cols++;
 	Map map[rows][cols];
 	InitMap(rows, cols, map, bs, bscnt);
 	PrintMap(rows, cols, map, bs, bscnt);
-
-	int cmdCnt;
-	if (scanf("%d", &cmdCnt) != 1) {
-		return -1;
-	};
-
-	for (int i = 0; i < cmdCnt; i++) {
-		scanf("%s %d %d", commands[i].cmd, &commands[i].coord.row, &commands[i].coord.col);
-	}
-
 	Runcmd(rows, cols, map, commands, cmdCnt);
 	PrintMap(rows, cols, map, bs, bscnt);
 	InitSignal(rows, cols, map, bs, bscnt);

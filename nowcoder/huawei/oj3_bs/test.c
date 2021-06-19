@@ -46,7 +46,7 @@ int InitMap(int r, int c, Map map[][c], BS bs[], int bscnt)
 
 int PrintMap(int r, int c, Map map[][c], BS bs[], int bscnt)
 {
-	printf("PrintMap\n");
+	/* printf("%s\n", __func__); */
 	for (int i = 1; i < r; i++) {
 		for (int j = 1; j < c; j++) {
 			printf("%d ", map[i][j].bs);
@@ -80,14 +80,16 @@ int Del(int r, int c, Map map[][c], int bsRow, int bsCol)
 
 int Runcmd(int r, int c, Map map[][c], Comand cmd[], int cmdcnt)
 {
-	printf("cmdcnt %d\n", cmdcnt);
+	/* printf("cmdcnt %d\n", cmdcnt); */
 	for (int i = 0; i < cmdcnt; i++) {
 		if (strcmp(cmd[i].cmd, "add") == 0) {
 			printf("add %d %d\n", cmd[i].coord.row, cmd[i].coord.col);
 			Add(r, c, map, cmd[i].coord.row, cmd[i].coord.col);
-		} else {
+		} else if (strcmp(cmd[i].cmd, "del") == 0) {
 			printf("del %d %d\n", cmd[i].coord.row, cmd[i].coord.col);
 			Del(r, c, map, cmd[i].coord.row, cmd[i].coord.col);
+		} else {
+			return -1;
 		}
 	}
 
@@ -95,10 +97,8 @@ int Runcmd(int r, int c, Map map[][c], Comand cmd[], int cmdcnt)
 }
 
 
-int SetSignal(int r, int c, Map map[][c], int bsRow, int bsCol)
+void SetSignal(int r, int c, Map map[][c], int bsRow, int bsCol)
 {
-	int bsr = bsRow;
-	int bsc = bsCol;
 	bsRow -= 1;
 	bsCol -= 1;
 
@@ -112,11 +112,9 @@ int SetSignal(int r, int c, Map map[][c], int bsRow, int bsCol)
 			}
 		}
 	}
-
-	return -1;
 }
 
-int InitSignal(int r, int c, Map map[][c], BS bs[], int bscnt)
+void InitSignal(int r, int c, Map map[][c], BS bs[], int bscnt)
 {
 	for (int i = 0; i < r; i++) {
 		for (int j = 0; j < c; j++) {
@@ -125,13 +123,11 @@ int InitSignal(int r, int c, Map map[][c], BS bs[], int bscnt)
 			}
 		}
 	}
-
-	return -1;
 }
 
-int PrintSignal(int r, int c, Map map[][c], BS bs[], int bscnt)
+void PrintSignal(int r, int c, Map map[][c], BS bs[], int bscnt)
 {
-	printf("PrintSignal\n");
+	/* printf("%s\n", __func__); */
 	for (int i = 1; i < r; i++) {
 		for (int j = 1; j < c; j++) {
 			printf("%d ", map[i][j].signal);
@@ -184,15 +180,16 @@ int main(int argc, char *argv[])
 			return -1;
 		}
 	}
+
 	rows++;
 	cols++;
 	Map map[rows][cols];
 	InitMap(rows, cols, map, bs, bscnt);
-	PrintMap(rows, cols, map, bs, bscnt);
+	/* PrintMap(rows, cols, map, bs, bscnt); */
 	Runcmd(rows, cols, map, commands, cmdCnt);
-	PrintMap(rows, cols, map, bs, bscnt);
+	/* PrintMap(rows, cols, map, bs, bscnt); */
 	InitSignal(rows, cols, map, bs, bscnt);
-	PrintSignal(rows, cols, map, bs, bscnt);
+	/* PrintSignal(rows, cols, map, bs, bscnt); */
 	GetSignal(rows, cols, map, bs, bscnt);
 
 	return -1;

@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define FILE_MAX_NUM 1000
+#define FILENAME_LEN 128
+
+void ConvertFilename(char filename[][FILENAME_LEN], int filecnt, char output[][FILENAME_LEN], int *outputCnt)
+{
+	
+}
+
+void PrintFIle(char output[][FILENAME_LEN], int cnt)
+{
+	for (int i = 0; i < cnt; i++) {
+		printf("%s%s", output[i], i < cnt -1 ? " " : "");
+	}
+}
+
+
+int main(int argc, char *argv[])
+{
+	char input[FILENAME_LEN];
+	char filename[FILE_MAX_NUM][FILENAME_LEN] = {0};
+	char tempfileName[FILENAME_LEN];
+	int filecnt;
+	char output[FILE_MAX_NUM][FILENAME_LEN] = {0};
+
+	int i = 0;
+	while (scanf("%s", input) != 1) {
+		strcpy(filename[i], tempfileName);
+		i++;
+	}
+
+	filecnt = i;
+	
+	int outputCnt = 0;
+	ConvertFilename(filename, filecnt, output, &outputCnt);
+	PrintFIle(output, outputCnt);
+
+	return -1;
+}

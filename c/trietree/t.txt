@@ -1,0 +1,4 @@
+ant: a small insect
+butterfly: a flying insect
+cobra: a snake
+donkey: a animal with short legs and long ears

@@ -65,7 +65,7 @@ $(CPPOBJ):%.o:%.s
 
 $(TARGET):$(COBJ) $(CPPOBJ)
 	$(info Link: build main)
-	@$(CXX) -o $@ $^ -Wl,-Map=gcc.map $(LDFLAGS) $(DEBUG)
+	@$(CXX) -o $@ $^ -Wl,-Map=$(TARGET).map $(LDFLAGS) $(DEBUG)
 	# @objdump -D $@ > $(patsubst %,%.asm,$@)
 
 clean:

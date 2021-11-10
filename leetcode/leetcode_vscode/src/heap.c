@@ -96,7 +96,6 @@ int main(int argc, char *argv[])
 
 #if 1
     build_heap(tree, n);
-    // heapify(tree, n, 0);
 #else
     heap_sort(tree, n);
 #endif

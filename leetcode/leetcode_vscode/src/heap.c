@@ -218,7 +218,7 @@ int PopHeap(HeapStruct *heap)
     int last = heap->element[heap->count--]; // 末元素
 
     // 遍历子节点，找到应该x应该填入的空穴位置，每次遍历，空穴都会向下沉一次，这种操作称为下滤
-    for (i = 1; i * 2 < heap->count; i = child) {
+    for (i = 1; i * 2 <= heap->count; i = child) {
         child = i * 2; // 左孩子
         // 对于小根堆，如果右孩子比左孩子小，选择右孩子
         if (child != heap->count && heap->element[child + 1] < heap->element[child]) {

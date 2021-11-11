@@ -96,7 +96,6 @@ void heapify_for(int tree[], int n, int parent)
 
     // 循环遍历parent的子节点
     for (int child = LEFT_CHILD(parent); child < n; child = LEFT_CHILD(child)) {
-
         if (child < (n - 1) && tree[child] < tree[child + 1]) { // 如果右孩子大，parent换成右孩子
             ++child;
         }
@@ -148,7 +147,7 @@ void build_heap(int tree[], int n)
     }
 }
 
-// 对堆进行排序
+// 利用堆结构对数组进行排序
 // 每次调整末节点并抛弃末节点
 void heap_sort(int tree[], int n)
 {
@@ -166,14 +165,21 @@ void PrintArray(int *a, int count)
     }
 }
 
+// 小根堆
 int InitHeap(HeapStruct **heap, int max)
 {
-    (*heap) = malloc(sizeof(HeapStruct));
     if (heap == NULL) {
+        printf("heap is NULL!!!\n");
         return -1;
     }
 
-    (*heap)->element = (int *)malloc((max + 1) * sizeof(int));
+    (*heap) = calloc(1, sizeof(HeapStruct));
+    if (*heap == NULL) {
+        printf("malloc -1\n");
+        return -1;
+    }
+
+    (*heap)->element = (int *)calloc(max + 1, sizeof(int));
     if ((*heap)->element == NULL) {
         free((*heap));
         return -1;
@@ -181,7 +187,7 @@ int InitHeap(HeapStruct **heap, int max)
 
     (*heap)->capacity = max;
     (*heap)->count = 0;
-    (*heap)->element[0] = 0;
+    (*heap)->element[0] = INT_MIN; // 如果是大根堆，填INT_MAX，小根堆填INT_MIN
 
     return 0;
 }
@@ -190,12 +196,14 @@ int InitHeap(HeapStruct **heap, int max)
 int PushHeap(HeapStruct *heap, int x)
 {
     if (heap->count >= heap->capacity) {
+        printf("queue is full\n");
         return -1;
     }
 
     int i;
-    // 对于小根堆，父节点比x大，执行上滤操作，父节点挪下来，放入空穴
-    for (i = ++heap->count; heap->element[i / 2] > x; i /= 2) {
+    // ++heap->count就是新增叶节点
+    // 对于小根堆，父节点比x大，执行上滤操作，父节点挪下来，放入空穴，相当于空穴上移
+    for (i = ++(heap->count); heap->element[i / 2] > x; i /= 2) {
         heap->element[i] = heap->element[i / 2]; // 父节点放入空穴
     }
 
@@ -207,13 +215,13 @@ int PushHeap(HeapStruct *heap, int x)
 // 弹出根节点时，必然会破坏堆结构，因此需要调整结构
 int PopHeap(HeapStruct *heap)
 {
-    int i;
-    int child; // 孩子节点
-
+    // 空队列直接返回
     if (heap->count <= 0) {
         return heap->element[0];
     }
 
+    int i;
+    int child; // 孩子节点
     int min = heap->element[1];              // 最小值
     int last = heap->element[heap->count--]; // 末元素
 
@@ -221,7 +229,7 @@ int PopHeap(HeapStruct *heap)
     for (i = 1; i * 2 <= heap->count; i = child) {
         child = i * 2; // 左孩子
         // 对于小根堆，如果右孩子比左孩子小，选择右孩子
-        if (child != heap->count && heap->element[child + 1] < heap->element[child]) {
+        if (child <= heap->count && heap->element[child + 1] < heap->element[child]) {
             child++;
         }
         // 如果孩子比末尾还小，把孩子移入空穴，此时孩子原来的位置child成为新的空穴，percolate down one level
@@ -244,8 +252,8 @@ int main(int argc, char *argv[])
     int n = ARRAY_SIZE(tree);
 
     /* 1. 堆排序 */
-    heap_sort(tree, n);
-    PrintArray(tree, n);
+    // heap_sort(tree, n);
+    // PrintArray(tree, n);
 
     /* 2. 优先队列 */
     HeapStruct *heap = NULL;
@@ -254,6 +262,8 @@ int main(int argc, char *argv[])
     for (int i = 0; i < ARRAY_SIZE(tree); i++) {
         PushHeap(heap, tree[i]);
     }
+
+    PrintArray(heap->element, heap->count+1);
 
     for (int i = 0; i < ARRAY_SIZE(tree); i++) {
         printf("%d ", PopHeap(heap));
